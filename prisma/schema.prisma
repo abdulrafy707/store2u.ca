@@ -1,0 +1,177 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                      Int       @id @default(autoincrement())
+  email                   String?   @unique
+  password                String?
+  name                    String?
+  role                    String?
+  imageUrl                String?   // Adding image URL for the user profile picture
+  phoneno                 String?
+  city                    String?
+  balance                 Float?
+  status                  Int?
+  verificationToken  String?  @unique
+  verificationTokenExpires DateTime? // Field to store token expiration
+  emailVerified           Boolean   @default(false) // Field to store verification status
+  resetToken              String?   @unique
+  resetTokenExpires       DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+}
+
+
+model Category {
+  id            Int           @id @default(autoincrement())
+  name          String
+  imageUrl      String?        // Making imageUrl optional temporarily
+  subcategories Subcategory[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Subcategory {
+  id          Int          @id @default(autoincrement())
+  name        String
+  imageUrl    String?  
+  categoryId  Int
+  category    Category     @relation(fields: [categoryId], references: [id])
+  products    Product[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Size {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+}
+
+model Color {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+}
+
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  discount    Float?
+  isTopRated  Boolean?
+  price       Float
+  stock       Int
+  subcategoryId Int
+  subcategory Subcategory  @relation(fields: [subcategoryId], references: [id])
+  images      Image[]      // Relation to images
+  colors      Json?        // Making colors optional
+  sizes       Json?        // Making sizes optional
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  orderItems  OrderItem[]
+}
+
+
+model Image {
+  id         Int       @id @default(autoincrement())
+  url        String
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id])
+  createdAt  DateTime  @default(now())
+}
+model Coupon {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  discount    Float     // Discount percentage
+  expiration  DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+model Order {
+  id             Int          @id @default(autoincrement())
+  userId         Int?
+  total          Float
+  discount       Float        @default(0.0)
+  tax            Float        @default(0.0)
+  netTotal       Float
+  status         OrderStatus
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  recipientName  String
+  streetAddress  String?
+  apartmentSuite String?
+  city           String
+  state          String
+  zip            String
+  country        String
+  phoneNumber    String
+  email          String
+  paymentMethod  String
+  paymentInfo    Json?
+  orderItems     OrderItem[]
+  couponCode     String?
+  shippingMethod String?
+  shippingTerms  String?
+  shipmentDate   DateTime?
+  deliveryDate   DateTime?
+}
+
+
+
+model OrderItem {
+  id            Int      @id @default(autoincrement())
+  orderId       Int
+  productId     Int
+  quantity      Int
+  price         Float
+  selectedSize  String?  // Optional field for the selected size
+  selectedColor String?  // Optional field for the selected color
+  order         Order    @relation(fields: [orderId], references: [id])
+  product       Product  @relation(fields: [productId], references: [id])
+}
+
+model Settings {
+  id             Int      @id @default(autoincrement())
+  deliveryCharge Float
+  taxPercentage  Float
+  other1         Float    @default(0)
+  other2         Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Slider {
+  id      Int    @id @default(autoincrement())
+  imgurl  String
+  link    String
+
+}
+
+
+
+
+
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+
