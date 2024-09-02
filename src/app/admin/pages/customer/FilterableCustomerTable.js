@@ -278,7 +278,7 @@ const FilterableCustomerTable = ({ customers, fetchCustomers }) => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex h-[90vh] overflow-y-auto items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 w-[700px] rounded shadow-lg">
             <h2 className="text-xl mb-4">{newCustomer.id ? 'Edit Customer' : 'Add New Customer'}</h2>
             <div className="mb-4">
@@ -337,14 +337,14 @@ const FilterableCustomerTable = ({ customers, fetchCustomers }) => {
                 <option value="ADMIN">Admin</option>
               </select>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Profile Image</label>
               <input
                 type="file"
                 onChange={handleImageChange}
                 className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </div> */}
             <div className="flex justify-end space-x-2 mt-4">
               <button
                 onClick={() => setIsModalOpen(false)}

@@ -20,8 +20,8 @@ const ProductPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState(null); // Default to null
+  const [selectedColor, setSelectedColor] = useState(null); // Default to null
   const [sizes, setSizes] = useState([]);
   const [colors, setColors] = useState([]);
   const [notification, setNotification] = useState('');
@@ -58,7 +58,6 @@ const ProductPage = () => {
       fetchProduct();
     }
   }, [id]);
-  
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -67,50 +66,45 @@ const ProductPage = () => {
   }, [dispatch]);
 
   const handleAddToCart = (product) => {
-    if (!selectedSize || !selectedColor) {
-      toast.error('Please select a size and color.');
-      return;
+    // Allow adding to cart even if size or color are not selected
+    if ((sizes.length > 0 && !selectedSize) || (colors.length > 0 && !selectedColor)) {
+        toast.error('Please select a size and color.');
+        return;
     }
 
-    const existingItemIndex = cart.findIndex(
-      (item) =>
-        item.productId === product.id &&
-        item.selectedSize === selectedSize &&
-        item.selectedColor === selectedColor
-    );
-
-    // Calculate the total quantity already in the cart
-    let totalQuantityInCart = quantity;
-    if (existingItemIndex !== -1) {
-      totalQuantityInCart += cart[existingItemIndex].quantity;
-    }
-
-    // Check if the total quantity exceeds the available stock
-    if (totalQuantityInCart > product.stock) {
-      toast.error(`You cannot add more than ${product.stock} of this item.`);
-      return;
+    // Check if the requested quantity exceeds the available stock
+    if (quantity > product.stock) {
+        toast.error(`You cannot add more than ${product.stock} of this quantity.`);
+        return; // Prevent adding to cart
     }
 
     const newCartItem = {
-      id: `${product.id}-${selectedSize}-${selectedColor}`,
-      productId: product.id,
-      quantity,
-      price: product.discount
-        ? calculateOriginalPrice(product.price, product.discount)
-        : product.price,
-      selectedColor,
-      selectedSize,
-      images: product.images,
-      name: product.name,
-      discount: product.discount,
+        id: `${product.id}-${selectedSize || 'default'}-${selectedColor || 'default'}`,
+        productId: product.id,
+        quantity,
+        price: product.discount
+            ? calculateOriginalPrice(product.price, product.discount)
+            : product.price,
+        selectedColor,
+        selectedSize,
+        images: product.images,
+        name: product.name,
+        discount: product.discount,
     };
+
+    const existingItemIndex = cart.findIndex(
+        (item) =>
+            item.productId === product.id &&
+            item.selectedSize === selectedSize &&
+            item.selectedColor === selectedColor
+    );
 
     let updatedCart = [...cart];
 
     if (existingItemIndex !== -1) {
-      updatedCart[existingItemIndex].quantity += quantity;
+        updatedCart[existingItemIndex].quantity += quantity;
     } else {
-      updatedCart.push(newCartItem);
+        updatedCart.push(newCartItem);
     }
 
     setCartState(updatedCart);
@@ -119,7 +113,8 @@ const ProductPage = () => {
 
     toast.success('Item added to cart successfully!');
     setShowRelatedPopup(true);
-  };
+};
+
 
   const calculateOriginalPrice = (price, discount) => {
     if (typeof price === 'number' && typeof discount === 'number') {
@@ -279,51 +274,58 @@ const ProductPage = () => {
           )}
           
           <div className="text-gray-500 mb-4" dangerouslySetInnerHTML={{ __html: product.description }}></div>
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Select Size</h3>
-            <div className="flex flex-wrap">
-              {sizes.length > 0 && sizes.map((size, index) => (
-                <label 
-                  key={index} 
-                  className={`mr-4 mb-2 text-gray-700 flex rounded items-center border-[1px] border-black px-2 ${selectedSize === size.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
-                  onClick={() => setSelectedSize(size.label)}
-                >
-                  <input
-                    type="radio"
-                    name="size"
-                    className="mr-2"
-                    value={size.label}
-                    checked={selectedSize === size.label}
-                    onChange={() => setSelectedSize(size.label)}
-                  />
-                  {size.label}
-                </label>
-              ))}
-            </div>
-          </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Select Color</h3>
-            <div className="flex flex-wrap">
-              {colors.length > 0 && colors.map((color, index) => (
-                <label 
-                  key={index} 
-                  className={`mr-4 mb-2 text-gray-700 flex items-center rounded border-[1px] border-black px-2 ${selectedColor === color.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
-                  onClick={() => setSelectedColor(color.label)}
-                >
-                  <input
-                    type="radio"
-                    name="color"
-                    className="mr-2"
-                    value={color.label}
-                    checked={selectedColor === color.label}
-                    onChange={() => setSelectedColor(color.label)}
-                  />
-                  {color.label}
-                </label>
-              ))}
+          {/* Conditionally render size selection */}
+          {sizes.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-lg font-medium mb-2">Select Size</h3>
+              <div className="flex flex-wrap">
+                {sizes.map((size, index) => (
+                  <label 
+                    key={index} 
+                    className={`mr-4 mb-2 text-gray-700 flex rounded items-center border-[1px] border-black px-2 ${selectedSize === size.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
+                    onClick={() => setSelectedSize(size.label)}
+                  >
+                    <input
+                      type="radio"
+                      name="size"
+                      className="mr-2"
+                      value={size.label}
+                      checked={selectedSize === size.label}
+                      onChange={() => setSelectedSize(size.label)}
+                    />
+                    {size.label}
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Conditionally render color selection */}
+          {colors.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-lg font-medium mb-2">Select Color</h3>
+              <div className="flex flex-wrap">
+                {colors.map((color, index) => (
+                  <label 
+                    key={index} 
+                    className={`mr-4 mb-2 text-gray-700 flex items-center rounded border-[1px] border-black px-2 ${selectedColor === color.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
+                    onClick={() => setSelectedColor(color.label)}
+                  >
+                    <input
+                      type="radio"
+                      name="color"
+                      className="mr-2"
+                      value={color.label}
+                      checked={selectedColor === color.label}
+                      onChange={() => setSelectedColor(color.label)}
+                    />
+                    {color.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center mb-4">
             <button

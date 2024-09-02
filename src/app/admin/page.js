@@ -33,7 +33,7 @@ const LoginPage = () => {
       if (response.data.success) {
         localStorage.setItem('token', response.data.token); // Store JWT token in localStorage
         const { role } = response.data.user;
-
+  
         if (role === 'ADMIN') {
           alert('Login Successfully');
           console.log('Redirecting to admin page...');
@@ -46,15 +46,19 @@ const LoginPage = () => {
           setError('Unknown role. Please contact support.');
         }
       } else {
-        setError(response.data.message);
+        setError(response.data.message || 'Failed to log in. Please try again.');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-      setError('Failed to log in. Please try again.');
+      // Log the error for debugging, but don't expose sensitive details
+      console.error('Error logging in:', error.message);
+  
+      // Set a user-friendly error message
+      setError('Failed to log in. Please check your credentials and try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
