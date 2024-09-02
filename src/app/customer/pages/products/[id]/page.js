@@ -282,7 +282,7 @@ const ProductPage = () => {
     <div className="relative inline-block w-32">
       <select
         className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-3 py-2 pr-8 rounded-md shadow leading-tight text-sm focus:outline-none focus:shadow-outline"
-        value={selectedSize}
+        value={selectedSize || ""}
         onChange={(e) => setSelectedSize(e.target.value)}
       >
         <option value="" disabled>Select size</option>
@@ -292,7 +292,7 @@ const ProductPage = () => {
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-300 rounded-r-md">
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-800 rounded-r-md">
         <svg className="fill-current h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z"/></svg>
       </div>
     </div>
@@ -305,7 +305,7 @@ const ProductPage = () => {
     <div className="relative inline-block w-32">
       <select
         className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-3 py-2 pr-8 rounded-md shadow leading-tight text-sm focus:outline-none focus:shadow-outline"
-        value={selectedColor}
+        value={selectedColor || ""}
         onChange={(e) => setSelectedColor(e.target.value)}
       >
         <option value="" disabled>Select color</option>
@@ -315,13 +315,12 @@ const ProductPage = () => {
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-300 rounded-r-md">
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-800 rounded-r-md">
         <svg className="fill-current h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z"/></svg>
       </div>
     </div>
   </div>
 )}
-
 
 
 
