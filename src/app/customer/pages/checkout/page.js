@@ -53,6 +53,33 @@ const CheckoutPage = () => {
       fetchExtraDeliveryCharge();
     }
   }, [paymentMethod]);
+  const validateForm = () => {
+    const { recipientName, streetAddress, city, state, zip, country, phoneNumber, email } = shippingAddress;
+  
+    // Check if any of the required fields are empty
+    if (!recipientName || !streetAddress || !city || !state || !zip || !country || !phoneNumber || !email) {
+      toast.error('Please fill in all the required fields.');
+      return false;
+    }
+  
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address.');
+      return false;
+    }
+  
+    // Validate phone number
+    const phoneRegex = /^\+92\d{10}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      toast.error('Please enter a valid phone number.');
+      return false;
+    }
+  
+    // All validations passed
+    return true;
+  };
+  
 
   const fetchSettings = async () => {
     try {
