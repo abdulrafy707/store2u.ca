@@ -277,55 +277,53 @@ const ProductPage = () => {
 
           {/* Conditionally render size selection */}
           {sizes.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-lg font-medium mb-2">Select Size</h3>
-              <div className="flex flex-wrap">
-                {sizes.map((size, index) => (
-                  <label 
-                    key={index} 
-                    className={`mr-4 mb-2 text-gray-700 flex rounded items-center border-[1px] border-black px-2 ${selectedSize === size.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
-                    onClick={() => setSelectedSize(size.label)}
-                  >
-                    <input
-                      type="radio"
-                      name="size"
-                      className="mr-2"
-                      value={size.label}
-                      checked={selectedSize === size.label}
-                      onChange={() => setSelectedSize(size.label)}
-                    />
-                    {size.label}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
+  <div className="mb-4">
+    <h3 className="text-md font-medium mb-2">Select Size</h3>
+    <div className="relative inline-block w-32">
+      <select
+        className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-3 py-2 pr-8 rounded-md shadow leading-tight text-sm focus:outline-none focus:shadow-outline"
+        value={selectedSize}
+        onChange={(e) => setSelectedSize(e.target.value)}
+      >
+        <option value="" disabled>Select size</option>
+        {sizes.map((size, index) => (
+          <option key={index} value={size.label}>
+            {size.label}
+          </option>
+        ))}
+      </select>
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-300 rounded-r-md">
+        <svg className="fill-current h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z"/></svg>
+      </div>
+    </div>
+  </div>
+)}
 
-          {/* Conditionally render color selection */}
-          {colors.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-lg font-medium mb-2">Select Color</h3>
-              <div className="flex flex-wrap">
-                {colors.map((color, index) => (
-                  <label 
-                    key={index} 
-                    className={`mr-4 mb-2 text-gray-700 flex items-center rounded border-[1px] border-black px-2 ${selectedColor === color.label ? 'bg-gray-600 text-white' : 'hover:bg-gray-600 hover:text-white'}`}
-                    onClick={() => setSelectedColor(color.label)}
-                  >
-                    <input
-                      type="radio"
-                      name="color"
-                      className="mr-2"
-                      value={color.label}
-                      checked={selectedColor === color.label}
-                      onChange={() => setSelectedColor(color.label)}
-                    />
-                    {color.label}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
+{colors.length > 0 && (
+  <div className="mb-4">
+    <h3 className="text-md font-medium mb-2">Select Color</h3>
+    <div className="relative inline-block w-32">
+      <select
+        className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-3 py-2 pr-8 rounded-md shadow leading-tight text-sm focus:outline-none focus:shadow-outline"
+        value={selectedColor}
+        onChange={(e) => setSelectedColor(e.target.value)}
+      >
+        <option value="" disabled>Select color</option>
+        {colors.map((color, index) => (
+          <option key={index} value={color.label}>
+            {color.label}
+          </option>
+        ))}
+      </select>
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 bg-gray-300 rounded-r-md">
+        <svg className="fill-current h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z"/></svg>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
 
           <div className="flex items-center mb-4">
             <button
