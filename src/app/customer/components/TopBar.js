@@ -5,8 +5,15 @@ import React from 'react';
 import { FiChevronRight, FiPhone, FiFacebook, FiInstagram } from 'react-icons/fi';
 import { FaTiktok, FaEnvelope } from 'react-icons/fa'; // Importing necessary icons
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation'; // Importing useRouter
 
 const TopBar = () => {
+  const router = useRouter(); // Initializing useRouter
+
+  const handleViewDetailsClick = () => {
+    router.push('/customer/pages/discounted-products'); // Navigating to the discounted products page
+  };
+
   return (
     <div className="hidden w-full md:flex bg-white py-2 border-b border-gray-300 text-gray-800">
       <div className="container w-full flex flex-col md:flex-row justify-between items-center px-4">
@@ -25,7 +32,9 @@ const TopBar = () => {
             >
               <FiChevronRight />
               <span>Get great devices up to 50% off</span>
-              <a href="#" className="text-blue-500 hover:underline">View details</a>
+              <button onClick={handleViewDetailsClick} className="text-blue-500 hover:underline">
+                View details
+              </button>
             </motion.div>
           </div>
         </div>
