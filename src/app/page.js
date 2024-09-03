@@ -25,11 +25,12 @@ export default function CustomerPage () {
       <Slider/>
      
       <main className="p-4">
+      <TopCategories/>
         <AllProducts/>
        
         
         
-        {/* <TopCategories/> */}
+        
         <Products/>
         <Features/>
         <NewArrivals/>

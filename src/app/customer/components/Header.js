@@ -177,7 +177,7 @@ const Header = () => {
             <Link href="/customer/pages/cart">
               <FiShoppingCart className="text-gray-700 cursor-pointer hover:text-blue-500 transition-colors duration-300" />
               {cartItems.length > 0 && (
-                <span className="absolute top-[-10px] right-[-10px] bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold">{cartItems.length}</span>
+                <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1 text-[10px] font-bold">{cartItems.length}</span>
               )}
             </Link>
           </div>

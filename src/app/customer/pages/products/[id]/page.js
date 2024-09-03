@@ -351,57 +351,6 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="mt-12">
-        <div className="flex mb-6">
-          <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === 'description' ? 'bg-white text-black' : 'bg-gray-200 text-gray-600'}`}
-            onClick={() => setActiveTab('description')}
-          >
-            Description
-          </button>
-          <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === 'shipping' ? 'bg-white text-black' : 'bg-gray-200 text-gray-600'}`}
-            onClick={() => setActiveTab('shipping')}
-          >
-            Shipping & Delivery
-          </button>
-        </div>
-
-        {/* Tab Content */}
-        <div className="bg-white p-6 rounded-b-lg shadow-md">
-          {activeTab === 'description' && (
-            <div dangerouslySetInnerHTML={{ __html: product.description }} />
-          )}
-          {activeTab === 'shipping' && (
-            <div>
-              <h3 className="font-bold text-lg mb-4">Shipping & Delivery</h3>
-              <p>
-                At PakStyle.pk, we prioritize delivering your purchases swiftly and securely.
-                Once your order is confirmed, our dedicated team works diligently to process and
-                package your items with care. We partner with reliable logistics companies to
-                ensure timely delivery at your doorstep.
-              </p>
-              <h4 className="font-semibold text-md mt-4">Shipping Charges</h4>
-              <ul className="list-disc pl-5">
-                <li>Rs.100/- shipping & handling charges usually applied per item.</li>
-                <li>If you order multiple items, 50% off will be applied on shipping charges.</li>
-              </ul>
-              <h4 className="font-semibold text-md mt-4">Delivery Time</h4>
-              <ul className="list-disc pl-5">
-                <li>2 to 3 business days in major cities like Karachi, Lahore, Islamabad, etc.</li>
-                <li>3 to 5 business days in small towns and cities.</li>
-                <li>5 to 8 business days in Chak & Villages.</li>
-              </ul>
-              <h4 className="font-semibold text-md mt-4">Logistics Partners</h4>
-              <ul className="list-disc pl-5">
-                <li>Leopards Courier, PostEx, Pakistan Post and Local Riders for Karachi Only.</li>
-              </ul>
-            </div>
-          )}
-        </div>
-      </div>
-
       {isModalOpen && (
         <ImageModal
           imageUrl={getImageUrl(product.images[currentImageIndex].url)}
@@ -417,66 +366,63 @@ const ProductPage = () => {
         />
       )}
 
-      {/* Related Products Section on Page */}
-      <div className="mt-12">
+<div className="mt-12">
         <h3 className="text-2xl font-semibold mb-6">Related Products</h3>
-        <div className="flex space-x-4 overflow-x-auto pl-8 pr-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-6">
           {relatedProducts.length > 0 ? (
             relatedProducts.map((relatedProduct) => {
               const originalPrice = calculateOriginalPrice(relatedProduct.price, relatedProduct.discount);
               return (
                 <div
                   key={relatedProduct.id}
-                  className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[430px] w-[250px] flex-shrink-0"
+                  className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
                   onClick={() => handleRelatedProductClick(relatedProduct.id)}
                 >
                   {relatedProduct.discount && (
-                    <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-10 w-10 flex items-center justify-center">
+                    <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
                       -{relatedProduct.discount}%
                     </div>
                   )}
-                  {relatedProduct.images && relatedProduct.images.length > 0 ? (
-                    <motion.img
-                      src={getImageUrl(relatedProduct.images[0].url)}
-                      alt={relatedProduct.name}
-                      className="h-80 w-full object-cover mb-4 rounded bg-white"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                  <div className="relative">
+                    {relatedProduct.images && relatedProduct.images.length > 0 ? (
+                      <motion.img
+                        src={getImageUrl(relatedProduct.images[0].url)}
+                        alt={relatedProduct.name}
+                        className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    ) : (
+                      <div
+                        className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
+                      >
+                        No Image
+                      </div>
+                    )}
+                    <button
+                      className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+                    >
+                      <span className="text-xl font-bold leading-none">+</span>
+                    </button>
+                  </div>
+                  <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">{relatedProduct.name}</h3>
+                  <div className="grid grid-cols-2 py-2">
+                  <div className="flex items-center">
+                  {product.discount ? (
+                    <div className="flex items-center justify-center  gap-3 flex-row-reverse">
+                      <p className="text-xs font-normal text-gray-700 line-through ">
+                        Rs.{product.price}
+                      </p>
+                      <p className="text-sm font-semibold text-red-700">
+                        Rs.{originalPrice}
+                      </p>
+                    </div>
                   ) : (
-                    <div className="h-80 w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
-                      No Image
-                    </div>
+                    <p className="text-sm font-normal text-gray-700">
+                      Rs.{product.price}
+                    </p>
                   )}
-                  <div className="px-2">
-                    <h3 className="text-md font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">{relatedProduct.name}</h3>
-                    <div className='grid grid-cols-2'>
-                      <div className="flex items-center">
-                        {relatedProduct.discount ? (
-                          <div className='flex flex-col'>
-                            <p className="text-md font-normal text-gray-700 line-through mr-2">
-                              Rs.{relatedProduct.price}
-                            </p>
-                            <p className="text-md font-bold text-red-700">
-                              Rs.{originalPrice}
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="text-md font-bold text-gray-700">
-                            Rs.{relatedProduct.price}
-                          </p>
-                        )}
-                      </div>
-                      <div className='flex absolute bottom-3 right-3 justify-end items-end'>
-                      <button
-  className="absolute bottom-4 right-2 border border-gray-700 h-5 w-16 text-xs hover:text-blue-700 text-gray-700 font-normal flex justify-center items-center rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors duration-300"
-  onClick={() => handleProductClick(product.id)}
->
-  Shop Now
-</button>
-
-                      </div>
-                    </div>
+                </div>
                   </div>
                 </div>
               );

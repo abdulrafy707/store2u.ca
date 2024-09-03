@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight, FiPlus } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/cartSlice';
@@ -54,8 +54,8 @@ const Products = () => {
   const scrollLeft = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: -300,
-        behavior: 'smooth'
+        left: -200, // Adjust scrolling distance as needed
+        behavior: 'smooth',
       });
     }
   };
@@ -63,15 +63,15 @@ const Products = () => {
   const scrollRight = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: 300,
-        behavior: 'smooth'
+        left: 200, // Adjust scrolling distance as needed
+        behavior: 'smooth',
       });
     }
   };
 
   const calculateOriginalPrice = (price, discount) => {
     if (typeof price === 'number' && typeof discount === 'number') {
-      return price - (price * (discount / 100));
+      return price - price * (discount / 100);
     }
     return price;
   };
@@ -95,121 +95,114 @@ const Products = () => {
     <section className="py-8 bg-white">
       <div className="container mx-auto">
         {categories.map((category, index) => {
-          const categorySubcategories = subcategories.filter(subcat => subcat.categoryId === category.id);
-          const categoryProducts = products.filter(product =>
-            categorySubcategories.some(subcat => subcat.id === product.subcategoryId)
+          const categorySubcategories = subcategories.filter(
+            (subcat) => subcat.categoryId === category.id
           );
-
-          if (!productRefs.current[index]) {
-            productRefs.current[index] = React.createRef();
-          }
+          const categoryProducts = products.filter((product) =>
+            categorySubcategories.some(
+              (subcat) => subcat.id === product.subcategoryId
+            )
+          );
 
           return (
             <div key={category.id} className="mb-12">
-              <div className="flex md:flex-row flex-col">
-                <div className="md:w-1/4 w-full pr-4">
-                  <h3 className="text-xl text-gray-800 font-normal mt-4">{category.name}</h3>
+              <h3 className="text-xl text-gray-800 font-normal mt-4 text-center md:text-left">
+                {category.name}
+              </h3>
+              <div className="flex flex-col md:flex-row items-center md:items-start">
+                <div className="md:w-1/3 w-full md:pr-4 mb-4 md:mb-0 flex flex-col items-center md:items-start">
                   {category.imageUrl ? (
                     <img
                       src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
                       alt={category.name}
-                      className="w-full h-[300px] rounded-lg shadow-md"
-                    ></img>
+                      className="w-full max-w-[350px] md:max-w-[380px] h-[200px] md:h-[300px] rounded-lg shadow-md object-cover"
+                    />
                   ) : (
-                    <div className="w-full sm:w-full md:w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                    <div className="w-full max-w-[380px] h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
                       No Image
                     </div>
                   )}
-                  <p className="text-gray-500 mt-2">{category.description}</p>
+                  <p className="text-gray-500 mt-2 text-center md:text-left">
+                    {category.description}
+                  </p>
                 </div>
-                <div className="md:w-3/4 w-full relative">
+                <div className="md:w-2/3 w-full relative flex items-center">
                   <FiChevronLeft
-                    className="h-6 w-6 text-gray-500 cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 z-10"
+                    className="h-8 w-8 text-gray-500 cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 z-10"
                     onClick={() => scrollLeft(index)}
                   />
-                  <div ref={el => (productRefs.current[index] = el)} className="flex space-x-4 overflow-x-hidden pl-8 pr-8">
-                    {categoryProducts.length > 0 ? (
-                      categoryProducts.map((product) => {
-                        const originalPrice = calculateOriginalPrice(product.price, product.discount);
-                        return (
-                          <div
-                            key={product.id}
-                            className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[430px] w-[250px] flex-shrink-0"
-                          >
-                            {product.discount && (
-                              <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-10 w-10 flex items-center justify-center">
-                                -{product.discount}%
-                              </div>
-                            )}
-                            {/* {product.stock ===0 && (
-                <div className="absolute z-40 top-4 left-1 bg-red-500 text-white  h-6 w-20 flex items-center justify-center">
-                  Out Stock
-                </div>
-              )}
-              {product.stock >0 && (
-                <div className="absolute z-40 top-4 left-0 bg-green-500 text-white  h-6  w-20 flex items-center justify-center">
-                  In Stock 
-                </div>
-              )} */}
-
+                  <div
+                    ref={(el) => (productRefs.current[index] = el)}
+                    className="flex space-x-4 md:space-x-2 overflow-hidden pl-8 pr-8 w-full"
+                    style={{ scrollSnapType: 'x mandatory' }}
+                  >
+                    {categoryProducts.slice(0, 4).map((product) => {
+                      const originalPrice = calculateOriginalPrice(
+                        product.price,
+                        product.discount
+                      );
+                      return (
+                        <div
+                          key={product.id}
+                          className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+                          style={{ scrollSnapAlign: 'start' }}
+                        >
+                          {product.discount && (
+                            <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
+                              -{product.discount}%
+                            </div>
+                          )}
+                          <div className="relative">
                             {product.images && product.images.length > 0 ? (
                               <motion.img
                                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                                 alt={product.name}
-                                className="h-80 w-full object-cover mb-4 rounded bg-white"
+                                className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
                                 whileHover={{ scale: 1.1 }}
                                 transition={{ duration: 0.3 }}
                                 onClick={() => handleProductClick(product.id)}
                               />
                             ) : (
-                              <div className="h-80 w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
+                              <div className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
                                 No Image
                               </div>
                             )}
-                            <div className="px-2">
-                              <h3 className="text-md font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">{product.name}</h3>
-                              <div className='grid grid-cols-2'>
-                              <div className="flex items-center">
-                                {product.discount ? (
-                                  <div className='flex flex-col'>
-                                  <p className="text-md font-normal text-gray-700 line-through mr-2">
-                                    Rs.{product.price}
-                                  </p>
-                                  <p className="text-md font-normal text-red-700">
-                                    Rs.{originalPrice}
-                                  </p>
-                                </div>
-                                ) : (
-                                  <p className="text-md font-normal text-gray-700">
-                                    Rs.{product.price}
-                                  </p>
-                                )}
-                              </div>
-                            
-                            <div className='flex justify-end'>
                             <button
-  className="absolute bottom-4 right-2 border border-gray-700 h-5 w-16 text-xs hover:text-blue-700 text-gray-700 font-normal flex justify-center items-center rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors duration-300"
-  onClick={() => handleProductClick(product.id)}
->
-  Shop Now
-</button>
-
-
-
-
-              </div>
-              </div>
-              </div>
-                           
+                              className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              <span className="text-xl font-bold leading-none">+</span>
+                            </button>
                           </div>
-                        );
-                      })
-                    ) : (
-                      <div className="text-center col-span-full py-8 text-gray-500">No products available in this category.</div>
-                    )}
+                          <div className="px-2">
+                            <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                              {product.name}
+                            </h3>
+                            <div className="grid grid-cols-2 px-0 py-2">
+                <div className="flex items-center">
+                  {product.discount ? (
+                    <div className="flex items-center justify-center  gap-3 flex-row-reverse">
+                      <p className="text-xs font-normal text-gray-700 line-through ">
+                        Rs.{product.price}
+                      </p>
+                      <p className="text-sm font-semibold text-red-700">
+                        Rs.{originalPrice}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-normal text-gray-700">
+                      Rs.{product.price}
+                    </p>
+                  )}
+                </div>
+              </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                   <FiChevronRight
-                    className="h-6 w-6 text-gray-500 cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 z-10"
+                    className="h-8 w-8 text-gray-500 cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 z-10"
                     onClick={() => scrollRight(index)}
                   />
                 </div>
