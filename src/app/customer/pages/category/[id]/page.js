@@ -191,7 +191,7 @@ const CategoryPage = () => {
     return (
       <div
         key={product.id}
-        className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+        className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
         onClick={() => handleProductClick(product)}
       >
         {product.discount && (
@@ -225,11 +225,11 @@ const CategoryPage = () => {
         <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
           {product.name}
         </h3>
-        <div className="grid grid-cols-2 py-2">
+        <div className="grid grid-cols-2 pl-2 py-2">
           <div className="flex items-center">
             {product.discount ? (
               <div className="flex  items-center justify-center  gap-3 flex-row-reverse">
-                <p className="text-xs font-normal text-gray-700 line-through mr-2">
+                <p className="text-xs font-normal text-gray-700 line-through ">
                   Rs.{product.price}
                 </p>
                 <p className="text-sm font-semibold text-red-700">

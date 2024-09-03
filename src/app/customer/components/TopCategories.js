@@ -37,7 +37,7 @@ const TopCategories = () => {
         {categories.map((category, index) => (
           <motion.div
             key={category.id}
-            className={`${backgroundColors[index % backgroundColors.length]} rounded-lg shadow-lg overflow-hidden text-center p-2 cursor-pointer`}
+            className={`${backgroundColors[index % backgroundColors.length]}  shadow-lg overflow-hidden text-center p-2 cursor-pointer`}
             onClick={() => handleCategoryClick(category.id)}
             whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)" }}
             transition={{ duration: 0.3 }}

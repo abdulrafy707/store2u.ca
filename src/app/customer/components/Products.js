@@ -144,7 +144,7 @@ const Products = () => {
                       return (
                         <div
                           key={product.id}
-                          className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+                          className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
                           style={{ scrollSnapAlign: 'start' }}
                         >
                           {product.discount && (
@@ -157,7 +157,7 @@ const Products = () => {
                               <motion.img
                                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                                 alt={product.name}
-                                className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
+                                className="h-[240px] md:h-[220px] w-full object-cover mb-4  bg-white"
                                 whileHover={{ scale: 1.1 }}
                                 transition={{ duration: 0.3 }}
                                 onClick={() => handleProductClick(product.id)}

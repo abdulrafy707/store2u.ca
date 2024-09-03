@@ -375,7 +375,7 @@ const ProductPage = () => {
               return (
                 <div
                   key={relatedProduct.id}
-                  className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+                  className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
                   onClick={() => handleRelatedProductClick(relatedProduct.id)}
                 >
                   {relatedProduct.discount && (
