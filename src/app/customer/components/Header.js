@@ -121,7 +121,7 @@ const Header = () => {
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex lg:items-center lg:justify-between lg:space-x-8">
-          <div className="flex flex-col lg:flex-row text-xs lg:text-[14px] text-center lg:space-x-6">
+          <div className="flex flex-col text-black lg:flex-row text-xs lg:text-[16px] text-center lg:space-x-6">
             {visibleCategories.map((category) => (
               <Link
                 key={category.id}
@@ -177,7 +177,7 @@ const Header = () => {
             <Link href="/customer/pages/cart">
               <FiShoppingCart className="text-gray-700 cursor-pointer hover:text-blue-500 transition-colors duration-300" />
               {cartItems.length > 0 && (
-                <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1 text-[10px] font-bold">{cartItems.length}</span>
+                <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1   text-[10px] font-bold">{cartItems.length}</span>
               )}
             </Link>
           </div>
