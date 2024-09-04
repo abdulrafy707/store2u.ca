@@ -14,11 +14,12 @@ export async function GET() {
   }
 }
 
+
 export async function POST(request) {
   try {
-    const { name } = await request.json();
+    const { name, hex } = await request.json(); // Destructure both name and hex
     const newColor = await prisma.color.create({
-      data: { name },
+      data: { name, hex }, // Save both the name and hex value
     });
     return NextResponse.json(newColor, { status: 201 });
   } catch (error) {
@@ -30,12 +31,13 @@ export async function POST(request) {
   }
 }
 
+
 export async function PUT(request) {
   try {
-    const { id, name } = await request.json();
+    const { id, name, hex } = await request.json(); // Destructure both name and hex
     const updatedColor = await prisma.color.update({
       where: { id: parseInt(id) },
-      data: { name },
+      data: { name, hex }, // Update both the name and hex value
     });
     return NextResponse.json(updatedColor);
   } catch (error) {
@@ -46,6 +48,7 @@ export async function PUT(request) {
     );
   }
 }
+
 
 export async function DELETE(request) {
   try {

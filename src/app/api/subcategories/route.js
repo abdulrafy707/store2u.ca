@@ -63,28 +63,33 @@ export async function POST(request) {
 //   }
 // }
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const subcategoryId = searchParams.get('subcategoryId');
+
   try {
-    const subcategories = await prisma.subcategory.findMany({
+    if (!subcategoryId) {
+      return NextResponse.json({ message: 'Subcategory ID is required' }, { status: 400 });
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        subcategoryId: parseInt(subcategoryId, 10),
+      },
       include: {
-        category: true,
+        images: true, // Include related images
       },
     });
 
-    return NextResponse.json(subcategories);
+    return NextResponse.json(products);
   } catch (error) {
-    console.error('Error fetching subcategories:', error);
+    console.error('Error fetching products:', error);
     return NextResponse.json(
-      {
-        message: 'Failed to fetch subcategories',
-        status: false,
-        error: error.message,
-      },
+      { message: 'Failed to fetch products', status: false, error: error.message },
       { status: 500 }
     );
   }
 }
-
 
 
 // export async function GET() {

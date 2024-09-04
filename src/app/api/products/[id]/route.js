@@ -14,8 +14,11 @@ export async function PUT(request, { params }) {
       sizes,
       images,
       discount,
-      isTopRated = false  // Default to false if not provided
+      isTopRated = false
     } = await request.json();
+
+    // Use toFixed to round the discount to two decimal places before saving
+    const roundedDiscount = discount ? parseFloat(discount.toFixed(2)) : null;
 
     // Update the product details
     const updatedProduct = await prisma.product.update({
@@ -28,27 +31,17 @@ export async function PUT(request, { params }) {
         subcategoryId: subcategoryId ? parseInt(subcategoryId) : null,
         colors: colors ? JSON.stringify(colors) : null,
         sizes: sizes ? JSON.stringify(sizes) : null,
-        discount: discount ? parseFloat(discount) : null,
-        isTopRated: isTopRated,  // Ensure isTopRated is set to the provided value or false by default
+        discount: roundedDiscount, // Save the rounded discount value
+        isTopRated,
         updatedAt: new Date(),
       },
     });
 
-    // Update images
+    // Handle images
     if (images && images.length > 0) {
-      // Delete existing images
-      await prisma.image.deleteMany({
-        where: { productId: id },
-      });
-
-      // Add new images
+      await prisma.image.deleteMany({ where: { productId: id } });
       await prisma.image.createMany({
-        data: images
-          .filter((base64) => base64) // Filter out null or undefined values
-          .map((base64) => ({
-            url: base64,
-            productId: id,
-          })),
+        data: images.filter(Boolean).map((url) => ({ url, productId: id })),
       });
     }
 
@@ -69,6 +62,8 @@ export async function PUT(request, { params }) {
     );
   }
 }
+
+
 
 
 

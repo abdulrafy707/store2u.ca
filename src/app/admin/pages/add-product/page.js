@@ -70,7 +70,7 @@ const AddProductPageContent = () => {
     try {
       const response = await fetch('/api/colors');
       const data = await response.json();
-      setColors(data.map(color => ({ value: color.id, label: color.name })));
+      setColors(data.map(color => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex })));
     } catch (error) {
       console.error('Error fetching colors:', error);
     }
@@ -92,7 +92,7 @@ const AddProductPageContent = () => {
       const data = await response.json();
       setNewProduct({
         ...data,
-        colors: data.colors.map((color) => ({ value: color.id, label: color.name })),
+        colors: data.colors.map((color) => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex })),
         sizes: data.sizes.map((size) => ({ value: size.id, label: size.name })),
       });
       setExistingImages(data.images || []);
@@ -110,7 +110,7 @@ const AddProductPageContent = () => {
       return;
     }
     setIsLoading(true);
-  
+
     try {
       const uploadedImages = await Promise.all(images.map(async (img) => {
         const imageBase64 = await convertToBase64(img);
@@ -128,7 +128,7 @@ const AddProductPageContent = () => {
           throw new Error(result.error || 'Failed to upload image');
         }
       }));
-  
+
       const productToSubmit = {
         ...newProduct,
         description: newProduct.richDescription, // Directly save the rich text HTML content
@@ -138,12 +138,11 @@ const AddProductPageContent = () => {
         colors: JSON.stringify(newProduct.colors), // Store as JSON string with value and label
         sizes: JSON.stringify(newProduct.sizes), // Store as JSON string with value and label
         images: uploadedImages,
-        discount: newProduct.discount ? parseFloat(newProduct.discount) : null,
+        discount: newProduct.discount ? newProduct.discount : null,
+
         isTopRated: newProduct.isTopRated,
       };
-  
-      console.log('Sending product data to server:', productToSubmit);
-  
+
       const response = await fetch(`/api/products`, {
         method: 'POST',
         headers: {
@@ -151,7 +150,7 @@ const AddProductPageContent = () => {
         },
         body: JSON.stringify(productToSubmit),
       });
-  
+
       if (response.ok) {
         router.push('/admin/pages/Products');
       } else {
@@ -163,6 +162,10 @@ const AddProductPageContent = () => {
     }
     setIsLoading(false);
   };
+  const roundToTwoDecimalPlaces = (num) => {
+    return Math.round(num * 100) / 100;
+  };
+  
 
   const updateProduct = async () => {
     if (!newProduct.name || !newProduct.richDescription || !newProduct.price || !newProduct.stock || !newProduct.subcategoryId) {
@@ -198,11 +201,10 @@ const AddProductPageContent = () => {
         colors: newProduct.colors.map(color => color.value), // Convert to array of color IDs
         sizes: newProduct.sizes.map(size => size.value), // Convert to array of size IDs
         images: [...existingImages, ...uploadedImages],
-        discount: newProduct.discount ? parseFloat(newProduct.discount) : null,
+        discount: newProduct.discount ? newProduct.discount : null,
+
         isTopRated: newProduct.isTopRated,
       };
-
-      console.log('Updating product with:', productToSubmit);
 
       const response = await fetch(`/api/products/${newProduct.id}`, {
         method: 'PUT',
@@ -329,11 +331,11 @@ const AddProductPageContent = () => {
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Discount</label>
               <input
-                type="number"
-                value={newProduct.discount}
-                onChange={(e) => setNewProduct({ ...newProduct, discount: e.target.value })}
-                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+  type="number"
+  value={newProduct.discount ? roundToTwoDecimalPlaces(newProduct.discount) : ''}
+  onChange={(e) => setNewProduct({ ...newProduct, discount: parseFloat(e.target.value) || 0 })}
+  className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+/>
             </div>
             <div className="mb-4 grid grid-cols-2 ">
               <div>
@@ -357,6 +359,20 @@ const AddProductPageContent = () => {
                 options={colors}
                 className="mt-1"
                 classNamePrefix="select"
+                formatOptionLabel={({ label, hex }) => (
+                  <div className="flex items-center">
+                    <span
+                      style={{
+                        backgroundColor: hex,
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
+                        marginRight: '10px',
+                      }}
+                    ></span>
+                    <span>{label}</span>
+                  </div>
+                )}
               />
             </div>
             <div className="mb-4">

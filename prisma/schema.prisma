@@ -54,9 +54,11 @@ model Size {
 }
 
 model Color {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
+  id   Int    @id @default(autoincrement())
+  name String
+  hex  String?
 }
+
 
 
 model Product {

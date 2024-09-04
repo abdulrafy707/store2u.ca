@@ -91,7 +91,7 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
     // Get the existing colors and sizes for this product
     const existingColors = colors
       .filter((color) => item.colors.includes(color.id))
-      .map((color) => ({ value: color.id, label: color.name }));
+      .map((color) => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex }));
   
     const existingSizes = sizes
       .filter((size) => item.sizes.includes(size.id))
@@ -125,6 +125,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
       reader.onerror = (error) => reject(error);
     });
   };
+  const roundToTwoDecimalPlaces = (num) => {
+    return Math.round(num * 100) / 100;
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -151,7 +154,8 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
       const productData = {
         ...productForm,
         images: [...existingImages.map((img) => img.url), ...uploadedImages],
-        discount: productForm.discount ? parseFloat(productForm.discount) : null,
+        discount: productForm.discount ? productForm.discount : null,
+
         isTopRated: productForm.isTopRated,
       };
 
@@ -410,12 +414,18 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Discount</label>
                 <input
-                  type="number"
-                  name="discount"
-                  value={productForm.discount}
-                  onChange={handleFormChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+  type="number"
+  name="discount"
+  value={productForm.discount ? productForm.discount.toFixed(2) : 0} // Show rounded value
+  step="0.01" // Allow entering decimal values
+  onChange={(e) => setProductForm({ 
+    ...productForm, 
+    discount: roundToTwoDecimalPlaces(parseFloat(e.target.value) || 0) 
+  })}
+/>
+
+
+
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Top Rated</label>
@@ -450,9 +460,46 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                   name="colors"
                   value={productForm.colors}
                   onChange={(selected) => setProductForm({ ...productForm, colors: selected })}
-                  options={colors.map((color) => ({ value: color.id, label: color.name }))}
+                  options={colors.map((color) => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex }))}
+                  getOptionLabel={(color) => (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span
+                        style={{
+                          backgroundColor: color.hex,
+                          width: '16px',
+                          height: '16px',
+                          borderRadius: '50%',
+                          display: 'inline-block',
+                          marginRight: '10px',
+                        }}
+                      ></span>
+                      {color.label}
+                    </div>
+                  )}
                 />
               </div>
+              {productForm.colors.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-md font-medium mb-2">Selected Colors</h4>
+                  <div className="flex space-x-2">
+                    {productForm.colors.map((color, index) => (
+                      <div key={index} className="relative">
+                        <span
+                          style={{
+                            backgroundColor: color.hex,
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '50%',
+                            display: 'inline-block',
+                            marginRight: '10px',
+                          }}
+                        ></span>
+                        <span>{color.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Sizes</label>
                 <Select

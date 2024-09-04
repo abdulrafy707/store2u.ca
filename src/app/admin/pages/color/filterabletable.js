@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
+import ntc from 'ntcjs'; // Importing the ntcjs library
 
 const FilterableTable = ({ colors = [], fetchColors }) => {
   const [filter, setFilter] = useState('');
@@ -9,12 +10,13 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editColorId, setEditColorId] = useState(null);
-  const [newColor, setNewColor] = useState('');
+  const [newColorName, setNewColorName] = useState('');
+  const [newColorHex, setNewColorHex] = useState('#000000'); // Default to black
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setFilteredData(
-      (colors || []).filter((item) =>
+      (Array.isArray(colors) ? colors : []).filter((item) =>
         Object.values(item).some((val) =>
           String(val).toLowerCase().includes(filter.toLowerCase())
         )
@@ -30,13 +32,14 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: newColor }),
+        body: JSON.stringify({ name: newColorName, hex: newColorHex }),
       });
-
+  
       if (response.ok) {
         fetchColors();
         setIsModalOpen(false);
-        setNewColor('');
+        setNewColorName('');
+        setNewColorHex('#000000');
       } else {
         console.error('Failed to add color');
       }
@@ -45,8 +48,12 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
     }
     setIsLoading(false);
   };
-
+  
   const handleUpdateColor = async () => {
+    // Generate color name using ntc.js
+    const ntcResult = ntc.name(newColorHex);
+    const generatedName = ntcResult[1]; // Get the closest color name from ntc.js
+  
     setIsLoading(true);
     try {
       const response = await fetch('/api/colors', {
@@ -54,14 +61,15 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: editColorId, name: newColor }),
+        body: JSON.stringify({ id: editColorId, name: generatedName, hex: newColorHex }), // Use generatedName for name
       });
-
+  
       if (response.ok) {
-        fetchColors();
-        setIsModalOpen(false);
-        setNewColor('');
-        setEditColorId(null);
+        fetchColors(); // Refresh the colors list
+        setIsModalOpen(false); // Close the modal
+        setNewColorName(''); // Reset color name
+        setNewColorHex('#000000'); // Reset color hex
+        setEditColorId(null); // Reset edit color id
       } else {
         console.error('Failed to update color');
       }
@@ -70,7 +78,6 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
     }
     setIsLoading(false);
   };
-
   const handleDeleteColor = async (id) => {
     setIsLoading(true);
     try {
@@ -94,7 +101,8 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
   };
 
   const handleModalOpen = (color) => {
-    setNewColor(color ? color.name : '');
+    setNewColorName(color ? color.name : '');
+    setNewColorHex(color ? color.hex : '#000000'); // Set the color picker to the existing color or default
     setEditColorId(color ? color.id : null);
     setIsModalOpen(true);
   };
@@ -140,38 +148,35 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name (Hex)</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {Array.isArray(filteredData) && filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        className="text-indigo-600 hover:text-indigo-900 mr-2"
-                        onClick={() => handleModalOpen(item)}
-                      >
-                        Edit
-                      </button>
-                      {/* <button
-                        className="text-red-600 hover:text-red-900"
-                        onClick={() => handleDeleteColor(item.id)}
-                      >
-                        Delete
-                      </button> */}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="px-6 py-4 text-center text-gray-500">No data available</td>
-                </tr>
-              )}
-            </tbody>
+  {Array.isArray(filteredData) && filteredData.length > 0 ? (
+    filteredData.map((item) => (
+      <tr key={item.id}>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.id}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {item.name} ({item.hex || 'N/A'}) {/* Display HEX value here */}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <button
+            className="text-indigo-600 hover:text-indigo-900 mr-2"
+            onClick={() => handleModalOpen(item)}
+          >
+            Edit
+          </button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="3" className="px-6 py-4 text-center text-gray-500">No data available</td>
+    </tr>
+  )}
+</tbody>
+
           </table>
         </div>
       </div>
@@ -184,8 +189,18 @@ const FilterableTable = ({ colors = [], fetchColors }) => {
               <label className="block text-sm font-medium text-gray-700">Color Name</label>
               <input
                 type="text"
-                value={newColor}
-                onChange={(e) => setNewColor(e.target.value)}
+                value={newColorName}
+                onChange={(e) => setNewColorName(e.target.value)}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled // Automatically generated from hex, so disable manual editing
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Hex Value</label>
+              <input
+                type="color"
+                value={newColorHex}
+                onChange={(e) => setNewColorHex(e.target.value)}
                 className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

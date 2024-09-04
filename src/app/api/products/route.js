@@ -28,14 +28,14 @@ export async function POST(request) {
         price: parseFloat(price),
         stock: parseInt(stock),
         subcategoryId: parseInt(subcategoryId),
-        colors, // Already a JSON string, no need to stringify
-        sizes,  // Already a JSON string, no need to stringify
-        discount: discount ? parseFloat(discount) : null,
+        colors,
+        sizes,
+        discount: discount ? parseFloat(discount) : null,  // Parse the discount as a float
         isTopRated: isTopRated || false,
         createdAt: new Date(),
         updatedAt: new Date(),
         images: {
-          create: images.map(url => ({ url })),
+          create: images.map((url) => ({ url })),
         },
       },
       include: {
@@ -60,6 +60,7 @@ export async function POST(request) {
     );
   }
 }
+
 
 // export async function GET() {
 //   try {
