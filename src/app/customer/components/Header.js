@@ -109,9 +109,11 @@ const Header = () => {
   };
 
   const handleCategoryLeave = () => {
-    setHoveredCategory(null); // Reset on mouse leave
-    // Optionally, you could clear the subcategories here if desired
+    setHoveredCategory(null);
+    // Reset subcategories to show all when no category is hovered
+    fetchSubcategories(); // This will fetch and show all subcategories again
   };
+  
 
   return (
     <header className="bg-white py-4 sticky top-0 z-50 shadow-md">
@@ -172,52 +174,54 @@ const Header = () => {
                   </div>
 
                   {/* Second Column: Subcategories */}
-                  <div className="p-4 border-l bg-[#BDEDEA]">
-                    {hoveredCategory ? (
-                      subcategories
-                        .filter((subcategory) => subcategory.categoryId === hoveredCategory.id) // Show only subcategories of hovered category
-                        .map((subcategory) => (
-                          <div
-                            key={subcategory.id}
-                            className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
-                          >
-                            {/* Subcategory Image */}
-                            {subcategory.imageUrl && (
-                              <img
-                                src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`} // Adjust API URL or file path
-                                alt={subcategory.name}
-                                className="w-8 h-8 object-cover rounded-full"
-                              />
-                            )}
-                            {/* Subcategory Name */}
-                            <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
-                              <span>{subcategory.name}</span>
-                            </Link>
-                          </div>
-                        ))
-                    ) : (
-                      // Show all subcategories by default
-                      subcategories.map((subcategory) => (
-                        <div
-                          key={subcategory.id}
-                          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
-                        >
-                          {/* Subcategory Image */}
-                          {subcategory.imageUrl && (
-                            <img
-                              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
-                              alt={subcategory.name}
-                              className="w-8 h-8 object-cover rounded-full"
-                            />
-                          )}
-                          {/* Subcategory Name */}
-                          <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
-                            <span>{subcategory.name}</span>
-                          </Link>
-                        </div>
-                      ))
-                    )}
-                  </div>
+                  <div className="p-4 border-l h-[400px]  bg-[#BDEDEA]">
+  {hoveredCategory ? (
+    // If a category is hovered, filter subcategories for that category
+    subcategories
+      .filter((subcategory) => subcategory.categoryId === hoveredCategory.id)
+      .map((subcategory) => (
+        <div
+          key={subcategory.id}
+          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+        >
+          {/* Subcategory Image */}
+          {subcategory.imageUrl && (
+            <img
+              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
+              alt={subcategory.name}
+              className="w-8 h-8 object-cover rounded-full"
+            />
+          )}
+          {/* Subcategory Name */}
+          <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
+            <span>{subcategory.name}</span>
+          </Link>
+        </div>
+      ))
+  ) : (
+    // If no category is hovered, show all subcategories by default
+    subcategories.map((subcategory) => (
+      <div
+        key={subcategory.id}
+        className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+      >
+        {/* Subcategory Image */}
+        {subcategory.imageUrl && (
+          <img
+            src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
+            alt={subcategory.name}
+            className="w-8 h-8 object-cover rounded-full"
+          />
+        )}
+        {/* Subcategory Name */}
+        <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
+          <span>{subcategory.name}</span>
+        </Link>
+      </div>
+    ))
+  )}
+</div>
+
                 </div>
               )}
             </div>
