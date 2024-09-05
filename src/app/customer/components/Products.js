@@ -6,8 +6,6 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../store/cartSlice';
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
@@ -16,7 +14,6 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const productRefs = useRef([]);
   const router = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
@@ -44,11 +41,6 @@ const Products = () => {
 
   const handleProductClick = (id) => {
     router.push(`/customer/pages/products/${id}`);
-  };
-
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    alert(`${product.name} has been added to the cart.`);
   };
 
   const scrollLeft = (index) => {
@@ -173,7 +165,7 @@ const Products = () => {
                             )}
                             <button
                               className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-                              onClick={() => handleAddToCart(product)}
+                              onClick={() => handleProductClick(product.id)} // Navigate to product page
                             >
                               <span className="text-xl font-bold leading-none">+</span>
                             </button>

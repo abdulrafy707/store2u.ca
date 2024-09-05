@@ -19,8 +19,8 @@ const ProductPage = () => {
   const [cart, setCartState] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [selectedSize, setSelectedSize] = useState(null); 
-  const [selectedColor, setSelectedColor] = useState(null); 
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
   const [sizes, setSizes] = useState([]);
   const [colors, setColors] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -182,7 +182,7 @@ const ProductPage = () => {
           {product.stock > 0 && (
             <p className="text-lg font-bold text-green-700 mb-1">In Stock</p>
           )}
-          
+
           <div className="text-gray-500 mb-4" dangerouslySetInnerHTML={{ __html: product.description }}></div>
 
           {/* Color Swatches */}
@@ -195,7 +195,7 @@ const ProductPage = () => {
                     key={index}
                     onClick={() => setSelectedColor(color.label)}
                     className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
-                      selectedColor === color.label ? 'border-black' : 'border-gray-300'
+                      selectedColor === color.label ? 'border-black'  : 'border-gray-300'
                     }`}
                     style={{ backgroundColor: color.hex }} // Assuming `color.hex` contains the hex color value
                   >
@@ -212,28 +212,25 @@ const ProductPage = () => {
           )}
 
           {/* Size Selection */}
-          
-
-{sizes.length > 0 && (
-  <div className="mb-4">
-    <h3 className="text-md font-medium mb-2">Select Size</h3>
-    <div className="flex space-x-2">
-      {sizes.map((size, index) => (
-        <button
-          key={index}
-          onClick={() => setSelectedSize(size.label)}
-          disabled={size.stock === 0} // Disable button if the size is out of stock
-          className={`w-10 h-10 border text-center flex items-center justify-center cursor-pointer
-            ${selectedSize === size.label ? 'border-black border-[4px]' : 'border-gray-300'} 
-            ${size.stock === 0 ? 'line-through cursor-not-allowed text-gray-400' : 'hover:border-black'}`}
-        >
-          {size.label}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
+          {sizes.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-md font-medium mb-2">Select Size</h3>
+              <div className="flex space-x-2">
+                {sizes.map((size, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedSize(size.label)}
+                    disabled={size.stock === 0} // Disable button if the size is out of stock
+                    className={`w-10 h-10 border text-center flex items-center justify-center cursor-pointer
+                      ${selectedSize === size.label ? 'border-black border-[2px]' : 'border-gray-300'} 
+                      ${size.stock === 0 ? 'line-through cursor-not-allowed text-gray-400' : 'hover:border-black'}`}
+                  >
+                    {size.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center mb-4">
             <button
@@ -293,6 +290,13 @@ const ProductPage = () => {
                         No Image
                       </div>
                     )}
+                    {/* Add the + button */}
+                    <button
+                      className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+                      onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)} // Navigate to the product page
+                    >
+                      <span className="text-xl font-bold leading-none">+</span>
+                    </button>
                   </div>
                   <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">{relatedProduct.name}</h3>
                   <div className="grid grid-cols-2 py-2">
