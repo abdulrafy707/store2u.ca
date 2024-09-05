@@ -254,12 +254,12 @@ const Header = () => {
             </button>
           </form>
           <div className="relative flex">
-            <Link href="/customer/pages/cart">
+            <a href="/customer/pages/cart">
               <FiShoppingCart className="text-gray-700 cursor-pointer hover:text-blue-500 transition-colors duration-300" />
               {cartItems.length > 0 && (
                 <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1 text-[10px] font-bold">{cartItems.length}</span>
               )}
-            </Link>
+            </a>
           </div>
           {authToken ? (
             <div className="hidden lg:flex items-center space-x-4 lg:space-x-6">
