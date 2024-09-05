@@ -193,7 +193,7 @@ const Header = () => {
             />
           )}
           {/* Subcategory Name */}
-          <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
+          <Link href={`/customer/pages/subcategories/${subcategory.id}`}>
             <span>{subcategory.name}</span>
           </Link>
         </div>
