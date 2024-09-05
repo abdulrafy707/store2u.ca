@@ -122,12 +122,13 @@ export default function WhatsAppButton() {
             {cart.length > 0 && (
               <div className="mt-6">
                 <p className="text-md font-medium text-gray-700">Subtotal: Rs.{total}</p>
+                <a href='/customer/pages/cart'>
                 <button
                   className="bg-teal-500 text-white py-2 px-4 rounded-md mt-4 w-full"
-                  onClick={() => router.push('/customer/pages/cart')}
                 >
                   View Cart
                 </button>
+                </a>
               </div>
             )}
           </div>
