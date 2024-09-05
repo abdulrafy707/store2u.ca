@@ -23,14 +23,19 @@ const Header = () => {
   const cartItems = useSelector((state) => state.cart.items);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCategoriesAndSubcategories = async () => {
       try {
-        const response = await fetch('/api/categories');
-        const data = await response.json();
-        setCategories(data);
+        const categoryResponse = await fetch('/api/categories');
+        const categoriesData = await categoryResponse.json();
+        setCategories(categoriesData);
+
+        const subcategoryResponse = await fetch('/api/subcategories');
+        const subcategoriesData = await subcategoryResponse.json();
+        setSubcategories(subcategoriesData);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching categories and subcategories:', error);
         setCategories([]);
+        setSubcategories([]);
       }
     };
 
@@ -39,7 +44,8 @@ const Header = () => {
       setAuthToken(token);
     }
 
-    fetchCategories();
+    fetchCategoriesAndSubcategories();
+
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     dispatch(setCart(storedCart));
   }, [dispatch]);
@@ -81,7 +87,7 @@ const Header = () => {
     setIsSignOutModalOpen(false); // Close the modal without logging out
   };
 
-  const fetchSubcategories = async (categoryId) => {
+  const fetchSubcategoriesForCategory = async (categoryId) => {
     try {
       const response = await fetch(`/api/subcategories/${categoryId}`);
       const data = await response.json();
@@ -94,7 +100,7 @@ const Header = () => {
 
   const handleCategoryHover = (category) => {
     setHoveredCategory(category);
-    fetchSubcategories(category.id); // Fetch subcategories when a category is hovered
+    fetchSubcategoriesForCategory(category.id); // Fetch subcategories when a category is hovered
     setIsMegaDropdownOpen(true); // Open the mega dropdown
   };
 
@@ -104,7 +110,7 @@ const Header = () => {
 
   const handleCategoryLeave = () => {
     setHoveredCategory(null); // Reset on mouse leave
-    setSubcategories([]); // Clear subcategories
+    // Optionally, you could clear the subcategories here if desired
   };
 
   return (
@@ -168,8 +174,9 @@ const Header = () => {
                   {/* Second Column: Subcategories */}
                   <div className="p-4 border-l bg-[#BDEDEA]">
                     {hoveredCategory ? (
-                      subcategories.length > 0 ? (
-                        subcategories.map((subcategory) => (
+                      subcategories
+                        .filter((subcategory) => subcategory.categoryId === hoveredCategory.id) // Show only subcategories of hovered category
+                        .map((subcategory) => (
                           <div
                             key={subcategory.id}
                             className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
@@ -177,7 +184,7 @@ const Header = () => {
                             {/* Subcategory Image */}
                             {subcategory.imageUrl && (
                               <img
-                                src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`} // Ensure to adjust this to your actual API or file path
+                                src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`} // Adjust API URL or file path
                                 alt={subcategory.name}
                                 className="w-8 h-8 object-cover rounded-full"
                               />
@@ -188,11 +195,27 @@ const Header = () => {
                             </Link>
                           </div>
                         ))
-                      ) : (
-                        <p className="text-gray-500">No subcategories</p>
-                      )
                     ) : (
-                      <p className="text-gray-500">Hover over a category</p>
+                      // Show all subcategories by default
+                      subcategories.map((subcategory) => (
+                        <div
+                          key={subcategory.id}
+                          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+                        >
+                          {/* Subcategory Image */}
+                          {subcategory.imageUrl && (
+                            <img
+                              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
+                              alt={subcategory.name}
+                              className="w-8 h-8 object-cover rounded-full"
+                            />
+                          )}
+                          {/* Subcategory Name */}
+                          <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
+                            <span>{subcategory.name}</span>
+                          </Link>
+                        </div>
+                      ))
                     )}
                   </div>
                 </div>
@@ -252,6 +275,75 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden absolute top-14 left-0 w-full bg-white shadow-lg z-50">
+          {/* Search bar at the top */}
+          <div className="p-4 border-b">
+            <form className="relative flex" onSubmit={handleSearchSubmit}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search Items"
+                className="border rounded-full py-1 px-3 text-[14px] w-full text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button type="submit" className="absolute right-2 top-2 text-gray-700 hover:text-blue-500">
+                <FaSearch />
+              </button>
+            </form>
+          </div>
+
+          {/* Categories and More Button */}
+          <nav className="flex flex-col space-y-2 items-center p-4">
+            {categories.slice(0, 5).map((category) => (
+              <div
+                key={category.id}
+                className="text-gray-700 hover:text-blue-500 py-2 cursor-pointer"
+                onClick={() => handleCategoryClick(category.id)} // Navigate to category page
+              >
+                {category.name}
+              </div>
+            ))}
+            {categories.length > 5 && (
+              <button
+                className="text-blue-500 font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)} // Close the mobile menu
+              >
+                Show More
+              </button>
+            )}
+
+            {/* If the user is logged in, show "My Orders" */}
+            {authToken && (
+              <div
+                className="text-gray-700 hover:text-blue-500 py-2 cursor-pointer"
+                onClick={() => router.push('/customer/pages/orders')}
+              >
+                My Orders
+              </div>
+            )}
+
+            {/* Log Out Button if user is logged in */}
+            {authToken ? (
+              <div
+                className="text-gray-700 hover:text-blue-500 py-2 cursor-pointer"
+                onClick={handleSignOut}
+              >
+                Log Out
+              </div>
+            ) : (
+              <Link
+                href="/customer/pages/login"
+                className="text-gray-700 hover:text-blue-500 py-2"
+              >
+                Sign In
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
 
       {/* Sign-out Confirmation Modal */}
       {isSignOutModalOpen && (
