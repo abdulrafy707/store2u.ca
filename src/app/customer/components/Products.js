@@ -95,6 +95,7 @@ const Products = () => {
     <section className="py-8 bg-white">
       <div className="container mx-auto">
         {categories.map((category, index) => {
+          // Filter products based on the category's subcategories
           const categorySubcategories = subcategories.filter(
             (subcat) => subcat.categoryId === category.id
           );
@@ -103,6 +104,9 @@ const Products = () => {
               (subcat) => subcat.id === product.subcategoryId
             )
           );
+
+          // If no products for the category, skip rendering
+          if (categoryProducts.length === 0) return null;
 
           return (
             <div key={category.id} className="mb-12">
@@ -144,7 +148,7 @@ const Products = () => {
                       return (
                         <div
                           key={product.id}
-                          className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+                          className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
                           style={{ scrollSnapAlign: 'start' }}
                         >
                           {product.discount && (
@@ -157,7 +161,7 @@ const Products = () => {
                               <motion.img
                                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                                 alt={product.name}
-                                className="h-[240px] md:h-[220px] w-full object-cover mb-4  bg-white"
+                                className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
                                 whileHover={{ scale: 1.1 }}
                                 transition={{ duration: 0.3 }}
                                 onClick={() => handleProductClick(product.id)}
@@ -169,7 +173,7 @@ const Products = () => {
                             )}
                             <button
                               className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-                              onClick={() => handleProductClick(product.id)}
+                              onClick={() => handleAddToCart(product)}
                             >
                               <span className="text-xl font-bold leading-none">+</span>
                             </button>
@@ -179,23 +183,23 @@ const Products = () => {
                               {product.name}
                             </h3>
                             <div className="grid grid-cols-2 px-0 py-2">
-                <div className="flex items-center">
-                  {product.discount ? (
-                    <div className="flex items-center justify-center  gap-3 flex-row-reverse">
-                      <p className="text-xs font-normal text-gray-700 line-through ">
-                        Rs.{product.price}
-                      </p>
-                      <p className="text-sm font-semibold text-red-700">
-                        Rs.{originalPrice}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-sm font-normal text-gray-700">
-                      Rs.{product.price}
-                    </p>
-                  )}
-                </div>
-              </div>
+                              <div className="flex items-center">
+                                {product.discount ? (
+                                  <div className="flex items-center justify-center  gap-3 flex-row-reverse">
+                                    <p className="text-xs font-normal text-gray-700 line-through ">
+                                      Rs.{product.price}
+                                    </p>
+                                    <p className="text-sm font-semibold text-red-700">
+                                      Rs.{originalPrice}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <p className="text-sm font-normal text-gray-700">
+                                    Rs.{product.price}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       );

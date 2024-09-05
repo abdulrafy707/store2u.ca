@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import { motion } from 'framer-motion';
@@ -16,6 +16,7 @@ const SubcategoryPage = () => {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000000);  // Placeholder for default max value
   const [highestPrice, setHighestPrice] = useState(0);  // Track the highest price
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSubcategoryData = async () => {
@@ -53,6 +54,10 @@ const SubcategoryPage = () => {
       product.price >= minPrice && product.price <= maxPrice
     );
     setFilteredProducts(filtered);
+  };
+
+  const handleProductClick = (id) => {
+    router.push(`/customer/pages/products/${id}`);
   };
 
   if (isLoading) {
@@ -106,7 +111,8 @@ const SubcategoryPage = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white shadow-md cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+              className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+              onClick={() => handleProductClick(product.id)} // Go to product page on card click
             >
               {product.discount && (
                 <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
@@ -127,6 +133,15 @@ const SubcategoryPage = () => {
                     No Image
                   </div>
                 )}
+                <button
+                  className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering the card's click event
+                    handleProductClick(product.id);
+                  }}
+                >
+                  <span className="text-xl font-bold leading-none">+</span>
+                </button>
               </div>
               <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
                 {product.name}

@@ -8,7 +8,7 @@ const AdminOrdersPage = () => {
   const [error, setError] = useState(null);
   const [order, setOrder] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
-  const [codCharge, setCodCharge] = useState(0); // Separate state for COD charges
+  const [codCharge, setCodCharge] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
   const [shippingMethod, setShippingMethod] = useState('');
   const [shippingTerms, setShippingTerms] = useState('');
@@ -34,13 +34,12 @@ const AdminOrdersPage = () => {
         setLoading(false);
       }
     };
-  
+
     const fetchSettings = async () => {
       try {
         const response = await axios.get('/api/settings/getSettings');
         const { deliveryCharge, taxPercentage, other1 } = response.data;
-        
-        // Set delivery and COD charges separately
+
         setDeliveryCharge(deliveryCharge);
         setCodCharge(order?.paymentMethod === 'Cash on Delivery' ? other1 : 0);
         setTaxRate(taxPercentage / 100);
@@ -48,14 +47,12 @@ const AdminOrdersPage = () => {
         console.error('Error fetching settings:', error);
       }
     };
-  
+
     if (id) {
       fetchOrder();
       fetchSettings();
     }
   }, [id, order?.paymentMethod]);
-  
-  
 
   const handleStatusChange = async (newStatus) => {
     setLoading(true);
@@ -121,7 +118,6 @@ const AdminOrdersPage = () => {
   const subtotalLessDiscount = subtotal - (order.discount ?? 0);
   const totalTax = subtotalLessDiscount * taxRate;
   const total = subtotalLessDiscount + totalTax + deliveryCharge + codCharge + (order.otherCharges ?? 0);
-  
 
   return (
     <div className="p-6 bg-white min-h-screen">
@@ -159,60 +155,12 @@ const AdminOrdersPage = () => {
               </div>
             </div>
           </div>
-          <div className="mt-8">
-            <h3 className="text-lg text-center py-2 font-bold text-gray-700">Shipping Information</h3>
-            <form onSubmit={handleShippingSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="shippingMethod" className="block text-sm font-medium text-gray-700">Shipping Method</label>
-                  <input
-                    type="text"
-                    id="shippingMethod"
-                    value={shippingMethod}
-                    onChange={(e) => setShippingMethod(e.target.value)}
-                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="shippingTerms" className="block text-sm font-medium text-gray-700">Shipping Terms</label>
-                  <input
-                    type="text"
-                    id="shippingTerms"
-                    value={shippingTerms}
-                    onChange={(e) => setShippingTerms(e.target.value)}
-                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="shipmentDate" className="block text-sm font-medium text-gray-700">Shipment Date</label>
-                  <input
-                    type="date"
-                    id="shipmentDate"
-                    value={shipmentDate}
-                    onChange={(e) => setShipmentDate(e.target.value)}
-                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="deliveryDate" className="block text-sm font-medium text-gray-700">Delivery Date</label>
-                  <input
-                    type="date"
-                    id="deliveryDate"
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Shipping Information</button>
-              </div>
-            </form>
-          </div>
+
+          {/* Scrollable table with color circles */}
           <div className="mt-8">
             <h3 className="text-lg text-center py-2 font-bold text-gray-700">Items</h3>
             <div className="mt-4">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-h-96"> {/* Limit height to 96 units */}
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
@@ -250,7 +198,13 @@ const AdminOrdersPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rs.{item.price}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rs.{item.quantity * item.price}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {item.selectedColor ? item.selectedColor : 'N/A'}
+                          <div className="flex items-center">
+                            <span
+                              className="inline-block w-4 h-4 rounded-full mr-2"
+                              style={{ backgroundColor: item.selectedColor || '#ccc' }} // Fallback color if not available
+                            ></span>
+                            {item.selectedColor ? item.selectedColor : 'N/A'}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {item.selectedSize ? item.selectedSize : 'N/A'}
@@ -261,6 +215,8 @@ const AdminOrdersPage = () => {
                 </table>
               </div>
             </div>
+
+            {/* Order summary */}
             <div className="mt-8 grid grid-cols-1 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex justify-between">
@@ -281,25 +237,25 @@ const AdminOrdersPage = () => {
                   <p className="text-md text-gray-700">Rs.{totalTax.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between">
-  <p className="text-md font-medium text-gray-700">Delivery Charges:</p>
-  <p className="text-md text-gray-700">Rs.{deliveryCharge.toFixed(2)}</p>
-</div>
-<div className="flex justify-between">
-  <p className="text-md font-medium text-gray-700">Cash on Delivery Charges:</p>
-  <p className="text-md text-gray-700">Rs.{codCharge.toFixed(2)}</p>
-</div>
-<div className="flex justify-between">
-  <p className="text-md font-medium text-gray-700">Other:</p>
-  <p className="text-md text-gray-700">Rs.{(order.otherCharges ?? 0).toFixed(2)}</p>
-</div>
-<hr className="my-2" />
-<div className="flex justify-between mt-4">
-  <p className="text-xl font-bold text-gray-700">Total:</p>
-  <p className="text-xl text-gray-700">Rs.{total.toFixed(2)}</p>
-</div>
-
+                  <p className="text-md font-medium text-gray-700">Delivery Charges:</p>
+                  <p className="text-md text-gray-700">Rs.{deliveryCharge.toFixed(2)}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-md font-medium text-gray-700">Cash on Delivery Charges:</p>
+                  <p className="text-md text-gray-700">Rs.{codCharge.toFixed(2)}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-md font-medium text-gray-700">Other:</p>
+                  <p className="text-md text-gray-700">Rs.{(order.otherCharges ?? 0).toFixed(2)}</p>
+                </div>
+                <hr className="my-2" />
+                <div className="flex justify-between mt-4">
+                  <p className="text-xl font-bold text-gray-700">Total:</p>
+                  <p className="text-xl text-gray-700">Rs.{total.toFixed(2)}</p>
+                </div>
               </div>
             </div>
+
             {order.shippingMethod && (
               <div className="mt-8">
                 <h3 className="text-lg text-center py-2 font-bold text-gray-700">Shipping Information</h3>

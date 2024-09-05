@@ -17,7 +17,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [authToken, setAuthToken] = useState(null);
-  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false); // For sign-out confirmation modal
   const router = useRouter();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
@@ -67,9 +67,18 @@ const Header = () => {
   };
 
   const handleSignOut = () => {
+    setIsSignOutModalOpen(true); // Open the confirmation modal
+  };
+
+  const confirmSignOut = () => {
     sessionStorage.removeItem('authToken');
     setAuthToken(null);
-    router.push('/customer/pages/login');
+    setIsSignOutModalOpen(false); // Close the modal
+    router.push('/customer/pages/login'); // Redirect to the login page
+  };
+
+  const cancelSignOut = () => {
+    setIsSignOutModalOpen(false); // Close the modal without logging out
   };
 
   const fetchSubcategories = async (categoryId) => {
@@ -134,63 +143,58 @@ const Header = () => {
                   onMouseLeave={handleCategoryLeave} // Close dropdown when mouse leaves
                 >
                   {/* First Column: Categories */}
-                  {/* First Column: Categories */}
-{/* First Column: Categories */}
-<div className="p-4 bg-[#EBF5FA]">
-  {categories.map((category) => (
-    <div
-      key={category.id}
-      className="text-gray-700 hover:text-blue-500 py-2 cursor-pointer flex items-center space-x-2"
-      onMouseEnter={() => handleCategoryHover(category)} // Trigger on hover
-      onClick={() => handleCategoryClick(category.id)} // Go to category page on click
-    >
-      {/* Image of the category */}
-      {category.imageUrl && (
-        <img
-          src={`https://data.tascpa.ca/uploads/${category.imageUrl}`} // Correct API URL or file path
-          alt={category.name}
-          className="w-8 h-8 object-cover rounded-full"
-        />
-      )}
-      {/* Category Name */}
-      <span>{category.name}</span>
-    </div>
-  ))}
-</div>
-
+                  <div className="p-4 bg-[#EBF5FA]">
+                    {categories.map((category) => (
+                      <div
+                        key={category.id}
+                        className="text-gray-700 hover:text-blue-500 py-2 cursor-pointer flex items-center space-x-2"
+                        onMouseEnter={() => handleCategoryHover(category)} // Trigger on hover
+                        onClick={() => handleCategoryClick(category.id)} // Go to category page on click
+                      >
+                        {/* Image of the category */}
+                        {category.imageUrl && (
+                          <img
+                            src={`https://data.tascpa.ca/uploads/${category.imageUrl}`} // Correct API URL or file path
+                            alt={category.name}
+                            className="w-8 h-8 object-cover rounded-full"
+                          />
+                        )}
+                        {/* Category Name */}
+                        <span>{category.name}</span>
+                      </div>
+                    ))}
+                  </div>
 
                   {/* Second Column: Subcategories */}
-                  {/* Second Column: Subcategories */}
-<div className="p-4 border-l bg-[#BDEDEA]">
-  {hoveredCategory ? (
-    subcategories.length > 0 ? (
-      subcategories.map((subcategory) => (
-        <div
-          key={subcategory.id}
-          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
-        >
-          {/* Subcategory Image */}
-          {subcategory.imageUrl && (
-            <img
-              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`} // Ensure to adjust this to your actual API or file path
-              alt={subcategory.name}
-              className="w-8 h-8 object-cover rounded-full"
-            />
-          )}
-          {/* Subcategory Name */}
-          <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
-            <span>{subcategory.name}</span>
-          </Link>
-        </div>
-      ))
-    ) : (
-      <p className="text-gray-500">No subcategories</p>
-    )
-  ) : (
-    <p className="text-gray-500">Hover over a category</p>
-  )}
-</div>
-
+                  <div className="p-4 border-l bg-[#BDEDEA]">
+                    {hoveredCategory ? (
+                      subcategories.length > 0 ? (
+                        subcategories.map((subcategory) => (
+                          <div
+                            key={subcategory.id}
+                            className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+                          >
+                            {/* Subcategory Image */}
+                            {subcategory.imageUrl && (
+                              <img
+                                src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`} // Ensure to adjust this to your actual API or file path
+                                alt={subcategory.name}
+                                className="w-8 h-8 object-cover rounded-full"
+                              />
+                            )}
+                            {/* Subcategory Name */}
+                            <Link href={`/customer/pages/subcategory/${subcategory.id}`}>
+                              <span>{subcategory.name}</span>
+                            </Link>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-gray-500">No subcategories</p>
+                      )
+                    ) : (
+                      <p className="text-gray-500">Hover over a category</p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -238,7 +242,7 @@ const Header = () => {
                 className="text-gray-700 hover:text-blue-500 text-[14px] transition-colors duration-300 flex items-center"
               >
                 <FiLogOut className="mr-2" />
-                Sign out
+                {/* Sign out */}
               </button>
             </div>
           ) : (
@@ -248,6 +252,30 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Sign-out Confirmation Modal */}
+      {isSignOutModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Confirm Sign Out</h2>
+            <p>Are you sure you want to sign out?</p>
+            <div className="flex justify-end space-x-4 mt-6">
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                onClick={cancelSignOut}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                onClick={confirmSignOut}
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
