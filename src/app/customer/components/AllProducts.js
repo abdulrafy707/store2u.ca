@@ -68,70 +68,69 @@ const TopRatedProducts = () => {
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-semibold mb-6">Top Rated</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-
-
-        {products.slice(0, visibleProducts).map((product) => {
-          const originalPrice = calculateOriginalPrice(product.price, product.discount);
-          return (
+  {products.slice(0, visibleProducts).map((product) => {
+    const originalPrice = calculateOriginalPrice(product.price, product.discount);
+    return (
+      <div
+        key={product.id}
+        className="bg-white shadow-md cursor-pointer border border-gray-300 relative h-[320px] w-full min-w-[200px]"
+      >
+        {product.discount && (
+          <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
+            -{product.discount}%
+          </div>
+        )}
+        <div className="relative">
+          {product.images && product.images.length > 0 ? (
+            <motion.img
+              src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
+              alt={product.name}
+              className="h-[240px] w-full object-cover mb-4 rounded bg-white"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => handleProductClick(product.id)}
+            />
+          ) : (
             <div
-              key={product.id}
-              className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px]"
+              className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
+              onClick={() => handleProductClick(product.id)}
             >
-              {product.discount && (
-                <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-                  -{product.discount}%
-                </div>
-              )}
-              <div className="relative">
-                {product.images && product.images.length > 0 ? (
-                  <motion.img
-                    src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
-                    alt={product.name}
-                    className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => handleProductClick(product.id)}
-                  />
-                ) : (
-                  <div
-                    className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
-                    onClick={() => handleProductClick(product.id)}
-                  >
-                    No Image
-                  </div>
-                )}
-                <button
-                  className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-                  onClick={() => handleProductClick(product.id)}
-                >
-                  <span className="text-xl font-bold leading-none">+</span>
-                </button>
-              </div>
-              <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                {product.name}
-              </h3>
-              <div className="grid grid-cols-2 px-2">
-                <div className="flex items-center">
-                  {product.discount ? (
-                    <div className="flex items-center justify-center  gap-3 flex-row-reverse">
-                      <p className="text-xs font-normal text-gray-700 line-through ">
-                        Rs.{product.price}
-                      </p>
-                      <p className="text-sm font-semibold text-red-700">
-                        Rs.{originalPrice}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-sm font-normal text-gray-700">
-                      Rs.{product.price}
-                    </p>
-                  )}
-                </div>
-              </div>
+              No Image
             </div>
-          );
-        })}
+          )}
+          <button
+            className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+            onClick={() => handleProductClick(product.id)}
+          >
+            <span className="text-xl font-bold leading-none">+</span>
+          </button>
+        </div>
+        <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+          {product.name}
+        </h3>
+        <div className="grid grid-cols-2 px-2">
+          <div className="flex items-center">
+            {product.discount ? (
+              <div className="flex items-center justify-center  gap-3 flex-row-reverse">
+                <p className="text-xs font-normal text-gray-700 line-through ">
+                  Rs.{product.price}
+                </p>
+                <p className="text-sm font-semibold text-red-700">
+                  Rs.{originalPrice}
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm font-normal text-gray-700">
+                Rs.{product.price}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
+    );
+  })}
+</div>
+
       {visibleProducts < products.length && (
         <div className="text-center mt-6">
           <button
