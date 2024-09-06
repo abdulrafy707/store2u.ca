@@ -493,7 +493,8 @@ const handleInputChange = (e) => {
                 />
                 <FiTag className="absolute right-3 text-gray-500 font-bold" />
               </div>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 w-full" onClick={handleApplyCoupon}>
+              <button type="button" className="bg-blue-500 text-white py-2 px-4 rounded-md mt-4 w-full" onClick={handleApplyCoupon}>
+
                 Apply Coupon
               </button>
               {couponMessage && (
