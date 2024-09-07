@@ -20,7 +20,7 @@ const CartPage = () => {
   // Fetch delivery charge (assuming you have an API for this)
   const fetchDeliveryCharge = async () => {
     try {
-      const response = await fetch('/api/delivery'); // Replace with actual endpoint
+      const response = await fetch('/api/settings/getSetting'); // Replace with actual endpoint
       const data = await response.json();
       setDeliveryCharge(data.deliveryCharge || 0); // Fallback to 0 if not provided
     } catch (error) {
