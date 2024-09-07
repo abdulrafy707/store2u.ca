@@ -159,10 +159,10 @@ const CartPage = () => {
               <p className="text-xl font-bold text-gray-700">Subtotal:</p>
               <p className="text-md text-gray-700">Rs.{subtotal.toFixed(2)}</p>
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <p className="text-md font-medium text-gray-700">Delivery Charge:</p>
               <p className="text-md text-gray-700">Rs.{deliveryCharge.toFixed(2)}</p>
-            </div>
+            </div> */}
             <hr className="h-2"></hr>
             <div className="flex justify-between">
               <p className="text-xl font-bold text-gray-700">Total:</p>
