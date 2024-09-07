@@ -105,6 +105,7 @@ const Header = () => {
   };
 
   const handleCategoryClick = (categoryId) => {
+  
     router.push(`/customer/pages/category/${categoryId}`);
   };
 

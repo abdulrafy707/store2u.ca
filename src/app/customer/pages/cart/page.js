@@ -21,16 +21,17 @@ const CartPage = () => {
   useEffect(() => {
     const storedCart = JSON.parse(sessionStorage.getItem('cart')) || [];
     dispatch(setCart(storedCart));
-
     fetchSettings().then(() => {
       calculateTotal(storedCart);
     });
   }, [dispatch]);
 
   useEffect(() => {
-    sessionStorage.setItem('cart', JSON.stringify(cart));
-    calculateTotal(cart);
-  }, [cart]);
+    if (cart.length > 0 && deliveryCharge && taxRate) {
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      calculateTotal(cart);
+    }
+  }, [cart, deliveryCharge, taxRate]);
 
   const fetchSettings = async () => {
     try {
@@ -50,13 +51,19 @@ const CartPage = () => {
     setTotal(subtotal + deliveryCharge);
   };
 
+  const updateItemQuantity = (itemId, quantity) => {
+    dispatch(updateQuantity({ id: itemId, quantity }));
+
+    // Update subtotal immediately after quantity changes
+    const updatedCart = cart.map(item =>
+      item.id === itemId ? { ...item, quantity: quantity } : item
+    );
+    calculateTotal(updatedCart);
+  };
+
   const handleCheckout = () => {
     sessionStorage.setItem('cart', JSON.stringify(cart));
     router.push(`/customer/pages/checkout?total=${total}`);
-  };
-
-  const updateItemQuantity = (itemId, quantity) => {
-    dispatch(updateQuantity({ id: itemId, quantity }));
   };
 
   const handleRemoveFromCart = (itemId) => {
@@ -91,7 +98,7 @@ const CartPage = () => {
   return (
     <div className="container text-black bg-white mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-3/5 border border-gray-400 p-4">
+        <div className="w-full lg:w-3/5 border border-gray-300 rounded p-4">
           <h2 className="text-2xl font-semibold mb-6">Your Cart</h2>
           <div className="flex flex-col gap-4">
             {cart.map((item, index) => (
@@ -139,7 +146,7 @@ const CartPage = () => {
             ))}
           </div>
         </div>
-        <div className="w-full lg:w-2/5 border border-gray-400 p-4">
+        <div className="w-full lg:w-2/5 border rounded border-gray-300 p-4">
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
             <div className="flex justify-between">
