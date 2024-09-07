@@ -46,7 +46,7 @@ const Products = () => {
   const scrollLeft = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: -200, // Adjust scrolling distance as needed
+        left: -200,
         behavior: 'smooth',
       });
     }
@@ -55,7 +55,7 @@ const Products = () => {
   const scrollRight = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: 200, // Adjust scrolling distance as needed
+        left: 200,
         behavior: 'smooth',
       });
     }
@@ -85,7 +85,7 @@ const Products = () => {
 
   return (
     <section className="py-8 bg-white">
-      <div className="container mx-auto">
+      <div className="container mx-auto overflow-hidden">
         {categories.map((category, index) => {
           // Filter products based on the category's subcategories
           const categorySubcategories = subcategories.filter(
