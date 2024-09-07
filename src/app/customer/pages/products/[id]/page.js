@@ -279,73 +279,74 @@ const ProductPage = () => {
       {/* Related Products Section */}
       <div className="mt-12">
         <h3 className="text-2xl font-semibold mb-6">Related Products</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-6">
-          {relatedProducts.length > 0 ? (
-            relatedProducts.map((relatedProduct) => {
-              const originalPrice = calculateOriginalPrice(relatedProduct.price, relatedProduct.discount);
-              return (
-                <div
-                  key={relatedProduct.id}
-                  className="bg-white shadow-md cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
-                  onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
-                >
-                  {relatedProduct.discount && (
-                    <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-                      -{relatedProduct.discount}%
-                    </div>
-                  )}
-                  <div className="relative">
-                    {relatedProduct.images && relatedProduct.images.length > 0 ? (
-                      <motion.img
-                        src={getImageUrl(relatedProduct.images[0].url)}
-                        alt={relatedProduct.name}
-                        className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    ) : (
-                      <div className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
-                        No Image
-                      </div>
-                    )}
-                    {/* Add the + button */}
-                    <button
-                      className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-                      onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
-                    >
-                      <span className="text-xl font-bold leading-none">+</span>
-                    </button>
-                  </div>
-                  <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                    {relatedProduct.name}
-                  </h3>
-                  <div className="grid grid-cols-2 py-2">
-                    <div className="flex items-center">
-                      {relatedProduct.discount ? (
-                        <div className="flex items-center justify-center gap-3 flex-row-reverse">
-                          <p className="text-xs font-normal text-gray-700 line-through">
-                            Rs.{relatedProduct.price}
-                          </p>
-                          <p className="text-sm font-semibold text-red-700">
-                            Rs.{originalPrice}
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="text-sm font-normal text-gray-700">
-                          Rs.{relatedProduct.price}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="text-center col-span-full py-8 text-gray-500">
-              No related products available.
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+
+  {relatedProducts.length > 0 ? (
+    relatedProducts.map((relatedProduct) => {
+      const originalPrice = calculateOriginalPrice(relatedProduct.price, relatedProduct.discount);
+      return (
+        <div
+          key={relatedProduct.id}
+          className="bg-white shadow-md cursor-pointer border border-gray-300 relative h-[320px] w-full min-w-[200px]"
+          onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
+        >
+          {relatedProduct.discount && (
+            <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
+              -{relatedProduct.discount}%
             </div>
           )}
+          <div className="relative">
+            {relatedProduct.images && relatedProduct.images.length > 0 ? (
+              <motion.img
+                src={getImageUrl(relatedProduct.images[0].url)}
+                alt={relatedProduct.name}
+                className="h-[240px] w-full object-cover mb-4 rounded bg-white"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.3 }}
+              />
+            ) : (
+              <div className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
+                No Image
+              </div>
+            )}
+            <button
+              className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+              onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
+            >
+              <span className="text-xl font-bold leading-none">+</span>
+            </button>
+          </div>
+          <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+            {relatedProduct.name}
+          </h3>
+          <div className="grid grid-cols-2 py-2">
+            <div className="flex items-center">
+              {relatedProduct.discount ? (
+                <div className="flex items-center justify-center gap-3 flex-row-reverse">
+                  <p className="text-xs font-normal text-gray-700 line-through">
+                    Rs.{relatedProduct.price}
+                  </p>
+                  <p className="text-sm font-semibold text-red-700">
+                    Rs.{originalPrice}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm font-normal text-gray-700">
+                  Rs.{relatedProduct.price}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
+      );
+    })
+  ) : (
+    <div className="text-center col-span-full py-8 text-gray-500">
+      No related products available.
+    </div>
+  )}
+</div>
+
       </div>
 
       {/* Modal for Related Products */}
