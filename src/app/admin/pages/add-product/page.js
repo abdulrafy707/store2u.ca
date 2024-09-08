@@ -18,7 +18,7 @@ const AddProductPageContent = () => {
     subcategoryId: '',
     colors: [],
     sizes: [],
-    image: null,
+    image: [],
     imageUrl: '',
     discount: '',
     isTopRated: false,

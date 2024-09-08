@@ -85,7 +85,7 @@ const Products = () => {
 
   return (
     <section className="py-8 bg-white">
-      <div className="container mx-auto overflow-hidden">
+      <div className="flex flex-wrap justify-center md:justify-start items-center">
         {categories.map((category, index) => {
           // Filter products based on the category's subcategories
           const categorySubcategories = subcategories.filter(
