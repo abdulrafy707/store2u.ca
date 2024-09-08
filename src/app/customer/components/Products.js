@@ -46,7 +46,7 @@ const Products = () => {
   const scrollLeft = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: -200,
+        left: -200, // Adjust scrolling distance as needed
         behavior: 'smooth',
       });
     }
@@ -55,7 +55,7 @@ const Products = () => {
   const scrollRight = (index) => {
     if (productRefs.current[index]) {
       productRefs.current[index].scrollBy({
-        left: 200,
+        left: 200, // Adjust scrolling distance as needed
         behavior: 'smooth',
       });
     }
@@ -85,7 +85,7 @@ const Products = () => {
 
   return (
     <section className="py-8 bg-white">
-      <div className="flex flex-wrap justify-center md:justify-start items-center">
+      <div className="container mx-auto">
         {categories.map((category, index) => {
           // Filter products based on the category's subcategories
           const categorySubcategories = subcategories.filter(
@@ -122,14 +122,14 @@ const Products = () => {
                     {category.description}
                   </p>
                 </div>
-                <div className=" w-full relative flex items-center">
+                <div className="md:w-2/3 w-full relative flex items-center">
                   <FiChevronLeft
                     className="h-8 w-8 text-gray-500 cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 z-10"
                     onClick={() => scrollLeft(index)}
                   />
                   <div
                     ref={(el) => (productRefs.current[index] = el)}
-                    className="flex space-x-4 md:space-x-5 overflow-hidden pl-8 pr-8 w-full"
+                    className="flex space-x-4 md:space-x-2 overflow-hidden pl-8 pr-8 w-full"
                     style={{ scrollSnapType: 'x mandatory' }}
                   >
                     {categoryProducts.slice(0, 4).map((product) => {

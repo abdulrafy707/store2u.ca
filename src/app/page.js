@@ -27,6 +27,7 @@ export default function CustomerPage () {
       <main className="p-4">
       <TopCategories/>
         <AllProducts/>
+        {/* <CategoryProductsComponent/> */}
        
         
         
