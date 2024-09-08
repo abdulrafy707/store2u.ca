@@ -124,7 +124,7 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                  <div id={`product-scroll-${index}`} className="grid grid-cols-2 md:grid-cols-4 gap-4 overflow-x-scroll scroll-smooth">
+                  <div id={`product-scroll-${index}`} className="products-grid grid grid-cols-2 md:grid-cols-4 gap-4 overflow-x-scroll scroll-smooth">
                     {categoryProducts.slice(0, 4).map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
