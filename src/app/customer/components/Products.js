@@ -12,6 +12,7 @@ const Products = () => {
   const [subcategories, setSubcategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [productIndices, setProductIndices] = useState({});
 
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
@@ -28,6 +29,13 @@ const Products = () => {
         const productsData = productsResponse.data;
         setProducts(productsData);
 
+        // Initialize the current product index for each category
+        const initialIndices = {};
+        categoriesData.forEach((category) => {
+          initialIndices[category.id] = 0; // Start from the first product
+        });
+        setProductIndices(initialIndices);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching categories and products:', error);
@@ -41,22 +49,18 @@ const Products = () => {
     router.push(`/customer/pages/products/${id}`);
   };
 
-  const scrollLeft = (index) => {
-    if (document.getElementById(`product-scroll-${index}`)) {
-      document.getElementById(`product-scroll-${index}`).scrollBy({
-        left: -300, // Adjust scrolling distance as needed
-        behavior: 'smooth',
-      });
-    }
+  const scrollRight = (categoryId, categoryProducts) => {
+    setProductIndices((prevIndices) => {
+      const nextIndex = Math.min(prevIndices[categoryId] + 1, categoryProducts.length - 1);
+      return { ...prevIndices, [categoryId]: nextIndex };
+    });
   };
 
-  const scrollRight = (index) => {
-    if (document.getElementById(`product-scroll-${index}`)) {
-      document.getElementById(`product-scroll-${index}`).scrollBy({
-        left: 300, // Adjust scrolling distance as needed
-        behavior: 'smooth',
-      });
-    }
+  const scrollLeft = (categoryId) => {
+    setProductIndices((prevIndices) => {
+      const prevIndex = Math.max(prevIndices[categoryId] - 1, 0);
+      return { ...prevIndices, [categoryId]: prevIndex };
+    });
   };
 
   const calculateOriginalPrice = (price, discount) => {
@@ -84,8 +88,7 @@ const Products = () => {
   return (
     <section className="py-8 bg-white">
       <div className="container mx-auto">
-        {categories.map((category, index) => {
-          // Filter products based on the category's subcategories
+        {categories.map((category) => {
           const categorySubcategories = subcategories.filter(
             (subcat) => subcat.categoryId === category.id
           );
@@ -95,8 +98,10 @@ const Products = () => {
             )
           );
 
-          // If no products for the category, skip rendering
           if (categoryProducts.length === 0) return null;
+
+          const currentProductIndex = productIndices[category.id] || 0;
+          const visibleProducts = categoryProducts.slice(currentProductIndex, currentProductIndex + 4);
 
           return (
             <div key={category.id} className="mb-12">
@@ -124,8 +129,8 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                  <div id={`product-scroll-${index}`} className="products-grid grid grid-cols-2 md:grid-cols-4 gap-4 overflow-x-scroll scroll-smooth">
-                    {categoryProducts.slice(0, 4).map((product) => {
+                  <div className="products-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {visibleProducts.map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
                         product.discount
@@ -191,7 +196,8 @@ const Products = () => {
                   {/* Left Arrow */}
                   <button
                     className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
-                    onClick={() => scrollLeft(index)}
+                    onClick={() => scrollLeft(category.id)}
+                    disabled={currentProductIndex === 0}
                   >
                     <FiChevronLeft className="h-6 w-6 text-gray-700" />
                   </button>
@@ -199,7 +205,8 @@ const Products = () => {
                   {/* Right Arrow */}
                   <button
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
-                    onClick={() => scrollRight(index)}
+                    onClick={() => scrollRight(category.id, categoryProducts)}
+                    disabled={currentProductIndex + 4 >= categoryProducts.length}
                   >
                     <FiChevronRight className="h-6 w-6 text-gray-700" />
                   </button>
