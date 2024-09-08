@@ -106,7 +106,7 @@ const Products = () => {
                 {category.name}
               </h3>
               <div className="flex flex-col md:flex-row items-center md:items-start">
-                <div className="md:w-1/3 w-full md:pr-4 mb-4 md:mb-0 flex flex-col items-center md:items-start">
+                <div className="md:w-1/3 w-full md:pr-0 flex flex-col items-center md:items-start">
                   {category.imageUrl ? (
                     <img
                       src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
@@ -129,7 +129,7 @@ const Products = () => {
                   />
                   <div
                     ref={(el) => (productRefs.current[index] = el)}
-                    className="flex space-x-4 md:space-x-2 overflow-hidden pl-8 pr-8 w-full"
+                    className="flex space-x-4 md:space-x-2 overflow-hidden pl-0 w-full"
                     style={{ scrollSnapType: 'x mandatory' }}
                   >
                     {categoryProducts.slice(0, 4).map((product) => {
