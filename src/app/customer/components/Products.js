@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
 
 const Products = () => {
@@ -38,6 +39,24 @@ const Products = () => {
 
   const handleProductClick = (id) => {
     router.push(`/customer/pages/products/${id}`);
+  };
+
+  const scrollLeft = (index) => {
+    if (document.getElementById(`product-scroll-${index}`)) {
+      document.getElementById(`product-scroll-${index}`).scrollBy({
+        left: -300, // Adjust scrolling distance as needed
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const scrollRight = (index) => {
+    if (document.getElementById(`product-scroll-${index}`)) {
+      document.getElementById(`product-scroll-${index}`).scrollBy({
+        left: 300, // Adjust scrolling distance as needed
+        behavior: 'smooth',
+      });
+    }
   };
 
   const calculateOriginalPrice = (price, discount) => {
@@ -92,10 +111,10 @@ const Products = () => {
                     <img
                       src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
                       alt={category.name}
-                      className="w-full max-w-[350px] md:max-w-[380px] h-[200px] md:h-[300px] rounded-lg shadow-md object-cover"
+                      className="w-full h-[200px] md:h-[300px] rounded-lg shadow-md object-cover"
                     />
                   ) : (
-                    <div className="w-full max-w-[380px] h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                    <div className="w-full h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
                       No Image
                     </div>
                   )}
@@ -104,68 +123,86 @@ const Products = () => {
                   </p>
                 </div>
 
-                <div className="products-grid grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {categoryProducts.slice(0, 4).map((product) => {
-                    const originalPrice = calculateOriginalPrice(
-                      product.price,
-                      product.discount
-                    );
-                    return (
-                      <div
-                        key={product.id}
-                        className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] flex-shrink-0"
-                      >
-                        {product.discount && (
-                          <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-                            -{product.discount}%
-                          </div>
-                        )}
-                        <div className="relative">
-                          {product.images && product.images.length > 0 ? (
-                            <img
-                              src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
-                              alt={product.name}
-                              className="h-[240px] w-full object-cover mb-4 rounded bg-white"
-                              onClick={() => handleProductClick(product.id)}
-                            />
-                          ) : (
-                            <div className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
-                              No Image
+                <div className="relative">
+                  <div id={`product-scroll-${index}`} className="grid grid-cols-2 md:grid-cols-4 gap-4 overflow-x-scroll scroll-smooth">
+                    {categoryProducts.slice(0, 4).map((product) => {
+                      const originalPrice = calculateOriginalPrice(
+                        product.price,
+                        product.discount
+                      );
+                      return (
+                        <div
+                          key={product.id}
+                          className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] flex-shrink-0"
+                        >
+                          {product.discount && (
+                            <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
+                              -{product.discount}%
                             </div>
                           )}
-                          <button
-                            className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
-                            onClick={() => handleProductClick(product.id)}
-                          >
-                            <span className="text-xl font-bold leading-none">+</span>
-                          </button>
-                        </div>
-                        <div className="px-2">
-                          <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                            {product.name}
-                          </h3>
-                          <div className="grid grid-cols-2 px-0 py-2">
-                            <div className="flex items-center">
-                              {product.discount ? (
-                                <div className="flex items-center justify-center  gap-3 flex-row-reverse">
-                                  <p className="text-xs font-normal text-gray-700 line-through ">
+                          <div className="relative">
+                            {product.images && product.images.length > 0 ? (
+                              <img
+                                src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
+                                alt={product.name}
+                                className="h-[240px] w-full object-cover mb-4 rounded bg-white"
+                                onClick={() => handleProductClick(product.id)}
+                              />
+                            ) : (
+                              <div className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
+                                No Image
+                              </div>
+                            )}
+                            <button
+                              className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              <span className="text-xl font-bold leading-none">+</span>
+                            </button>
+                          </div>
+                          <div className="px-2">
+                            <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                              {product.name}
+                            </h3>
+                            <div className="grid grid-cols-2 px-0 py-2">
+                              <div className="flex items-center">
+                                {product.discount ? (
+                                  <div className="flex items-center justify-center  gap-3 flex-row-reverse">
+                                    <p className="text-xs font-normal text-gray-700 line-through ">
+                                      Rs.{product.price}
+                                    </p>
+                                    <p className="text-sm font-semibold text-red-700">
+                                      Rs.{originalPrice}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <p className="text-sm font-normal text-gray-700">
                                     Rs.{product.price}
                                   </p>
-                                  <p className="text-sm font-semibold text-red-700">
-                                    Rs.{originalPrice}
-                                  </p>
-                                </div>
-                              ) : (
-                                <p className="text-sm font-normal text-gray-700">
-                                  Rs.{product.price}
-                                </p>
-                              )}
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
+
+                  {/* Left Arrow */}
+                  <button
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                    onClick={() => scrollLeft(index)}
+                  >
+                    <FiChevronLeft className="h-6 w-6 text-gray-700" />
+                  </button>
+
+                  {/* Right Arrow */}
+                  <button
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                    onClick={() => scrollRight(index)}
+                  >
+                    <FiChevronRight className="h-6 w-6 text-gray-700" />
+                  </button>
                 </div>
               </div>
             </div>
