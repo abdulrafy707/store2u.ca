@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCart } from '@/app/store/cartSlice';
 import { FaSearch } from 'react-icons/fa';
+import { useRef } from 'react';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
@@ -21,6 +22,7 @@ const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const dropdownRef = useRef(null); // Ref for mega dropdown
 
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
@@ -28,7 +30,7 @@ const Header = () => {
         const categoryResponse = await fetch('/api/categories');
         const categoriesData = await categoryResponse.json();
         setCategories(categoriesData);
-
+  
         const subcategoryResponse = await fetch('/api/subcategories');
         const subcategoriesData = await subcategoryResponse.json();
         setSubcategories(subcategoriesData);
@@ -38,18 +40,37 @@ const Header = () => {
         setSubcategories([]);
       }
     };
-
+  
     const token = sessionStorage.getItem('authToken');
     if (token) {
       setAuthToken(token);
     }
-
+  
     fetchCategoriesAndSubcategories();
-
+  
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     dispatch(setCart(storedCart));
-  }, [dispatch]);
-
+  
+    // Handle clicking outside the mega dropdown
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsMegaDropdownOpen(false);
+      }
+    };
+  
+    // Add event listener for clicks outside the dropdown
+    if (isMegaDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+  
+    // Cleanup the event listener when component unmounts or dropdown closes
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dispatch, isMegaDropdownOpen]); // Add isMegaDropdownOpen as a dependency
+  
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -148,7 +169,8 @@ const Header = () => {
               </button>
               {isMegaDropdownOpen && (
                 <div
-                  className="absolute left-0 top-full mt-7 w-[400px] bg-white shadow-lg z-50 grid grid-cols-2"
+                  ref={dropdownRef}
+                  className=" absolute left-0 top-full mt-7 w-[400px] bg-white shadow-lg z-50 grid grid-cols-2"
                   onMouseLeave={handleCategoryLeave} // Close dropdown when mouse leaves
                 >
                   {/* First Column: Categories */}
