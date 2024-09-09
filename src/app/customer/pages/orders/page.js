@@ -11,6 +11,7 @@ const UserOrders = () => {
   const [error, setError] = useState(null);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [taxRate, setTaxRate] = useState(0);
+  const [extraDeliveryCharge, setExtraDeliveryCharge] = useState(0); // Added extra delivery charge state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -26,6 +27,17 @@ const UserOrders = () => {
         setTaxRate(taxPercentage / 100);
       } catch (error) {
         console.error('Error fetching settings:', error);
+      }
+    };
+
+    const fetchExtraDeliveryCharge = async () => {
+      try {
+        const response = await axios.get('/api/settings/getSettings');
+        const { other1 } = response.data; // Fetch the extra delivery charge from the settings
+        setExtraDeliveryCharge(other1);
+      } catch (error) {
+        console.error('Error fetching extra delivery charge:', error);
+        setExtraDeliveryCharge(0);
       }
     };
 
@@ -51,6 +63,7 @@ const UserOrders = () => {
     };
 
     fetchSettings();
+    fetchExtraDeliveryCharge(); // Fetch extra delivery charge
     fetchOrders();
   }, [router]);
 
@@ -153,7 +166,8 @@ const UserOrders = () => {
                   const subtotal = order.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
                   const subtotalLessDiscount = subtotal - (order.discount ?? 0);
                   const totalTax = subtotalLessDiscount * taxRate;
-                  const total = subtotalLessDiscount + totalTax + deliveryCharge + (order.otherCharges ?? 0);
+                  const total = subtotalLessDiscount + totalTax + deliveryCharge + (order.extraDeliveryCharge ?? extraDeliveryCharge); // Include extra delivery charge
+
                   const productNames = (
                     <ul className="list-disc list-inside">
                       {order.orderItems.map(item => (
@@ -220,7 +234,7 @@ const UserOrders = () => {
                   const subtotal = selectedOrder.orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
                   const subtotalLessDiscount = subtotal - (selectedOrder.discount ?? 0);
                   const totalTax = subtotalLessDiscount * taxRate;
-                  const total = subtotalLessDiscount + totalTax + deliveryCharge + (selectedOrder.otherCharges ?? 0);
+                  const total = subtotalLessDiscount + totalTax + deliveryCharge + (selectedOrder.extraDeliveryCharge ?? extraDeliveryCharge); // Include extra delivery charge
 
                   return (
                     <>
@@ -233,8 +247,8 @@ const UserOrders = () => {
                         <p className="text-md text-gray-700">Rs.{deliveryCharge}</p>
                       </div>
                       <div className="flex justify-between">
-                        <p className="text-md font-medium text-gray-700">Other:</p>
-                        <p className="text-md text-gray-700">Rs.{(selectedOrder.otherCharges ?? 0)}</p>
+                        <p className="text-md font-medium text-gray-700">Cash on Delivery Charge:</p>
+                        <p className="text-md text-gray-700">Rs.{(selectedOrder.extraDeliveryCharge ?? extraDeliveryCharge)}</p>
                       </div>
                       <hr className="my-2" />
                       <div className="flex justify-between mt-4">
