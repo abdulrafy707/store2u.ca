@@ -101,9 +101,7 @@ const NewArrivals = () => {
                 </button>
               </div>
               <div className="px-2">
-                <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {product.name}
-                </h3>
+                
                 <div className="grid grid-cols-2 py-2">
                   <div className="flex items-center">
                     {product.discount ? (
@@ -119,7 +117,11 @@ const NewArrivals = () => {
                       <p className="text-sm font-normal text-gray-700">Rs.{product.price}</p>
                     )}
                   </div>
+                  
                 </div>
+                <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {product.name}
+                </h3>
               </div>
             </div>
           );

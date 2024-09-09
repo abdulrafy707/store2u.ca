@@ -105,9 +105,7 @@ const TopRatedProducts = () => {
             <span className="text-xl font-bold leading-none">+</span>
           </button>
         </div>
-        <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-          {product.name}
-        </h3>
+        
         <div className="grid grid-cols-2 px-2">
           <div className="flex items-center">
             {product.discount ? (
@@ -125,7 +123,11 @@ const TopRatedProducts = () => {
               </p>
             )}
           </div>
+          
         </div>
+        <h3 className="pt-2 px-2 text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+          {product.name}
+        </h3>
       </div>
     );
   })}

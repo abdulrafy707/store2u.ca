@@ -129,7 +129,7 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                  <div className="products-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="products-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {visibleProducts.map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
@@ -166,9 +166,7 @@ const Products = () => {
                             </button>
                           </div>
                           <div className="px-2">
-                            <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                              {product.name}
-                            </h3>
+                            
                             <div className="grid grid-cols-2 px-0 py-2">
                               <div className="flex items-center">
                                 {product.discount ? (
@@ -187,6 +185,10 @@ const Products = () => {
                                 )}
                               </div>
                             </div>
+                            <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                              {product.name}
+                            </h3>
+
                           </div>
                         </div>
                       );
