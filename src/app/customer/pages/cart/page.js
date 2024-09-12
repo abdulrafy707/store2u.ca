@@ -102,9 +102,11 @@ const CartPage = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="w-full lg:w-3/5 border border-gray-300 rounded p-4">
           <h2 className="text-2xl pl-4 font-semibold ">Your Cart</h2>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col pt-2 gap-4">
             {cart.map((item, index) => (
-              <div key={index} className="bg-white shadow-lg rounded-lg  flex items-start pl-4 pt-6 mt-4 justify-between">
+              <div key={index} className="bg-white rounded-lg flex items-start pl-1 pt-4 mt-0 justify-between border border-gray-300">
+
+
                 {item.images && item.images.length > 0 ? (
                   <img
                     src={`https://data.tascpa.ca/uploads/${item.images[0].url}`}
@@ -119,9 +121,9 @@ const CartPage = () => {
                 <div className="flex-grow pr-4">
                   <div className='flex justify-between items-center w-full'>
                     <h3 className="text-sm font-normal text-gray-600">{item.name}</h3>
-                    <p className="text-sm font-normal text-gray-600">Rs.{item.price}</p>
+                    <p className="text-md font-bold text-black">Rs.{item.price}</p>
                   </div>
-                  <p className="text-sm font-normal text-gray-600">Size: {item.selectedSize || 'N/A'}</p>
+                  <p className="text-sm font-normal text-gray-900">Size: {item.selectedSize || 'N/A'}</p>
                   <p className="text-sm font-normal text-gray-600">Color: {item.selectedColor || 'N/A'}</p>
                   <div className="flex items-center justify-end mt-2">
                     <button
@@ -154,7 +156,7 @@ const CartPage = () => {
             ))}
           </div>
         </div>
-        <div className="w-full lg:w-2/5 border rounded border-gray-300 p-4">
+        <div className="w-full lg:w-2/5 border rounded border-gray-300 h-[300px] p-4">
           <h2 className=" font-semibold mb-4">Order Summary</h2>
           <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
             <div className="flex justify-between">

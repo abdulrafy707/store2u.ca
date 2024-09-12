@@ -35,7 +35,7 @@ function Slider() {
             <a href={slide.link} target="_blank" rel="noopener noreferrer">
               <img 
                 src={slide.image} 
-                className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover" 
+                className="w-full h-[300px] md:h-[500px] lg:h-[500px] object-cover" 
                 alt={`Slide ${index}`} 
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none bg-black bg-opacity-50">

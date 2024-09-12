@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -19,8 +17,10 @@ const TopRatedProducts = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('/api/products/topRated');
-        setProducts(response.data.data);
+        const fetchedProducts = response.data.data;
+        setProducts(fetchedProducts);
         setLoading(false);
+        console.log('Products fetched:', fetchedProducts.length);
       } catch (error) {
         console.error('Error fetching top-rated products:', error);
         setLoading(false);
@@ -133,15 +133,17 @@ const TopRatedProducts = () => {
         })}
       </div>
 
+      {/* Show "Show More" Button if there are more products to display */}
       {visibleProducts < products.length && (
         <div className="text-center mt-6">
-          <button
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
-            onClick={showMoreProducts}
-          >
-            Show More
-          </button>
-        </div>
+        <button
+          className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
+          onClick={showMoreProducts}
+        >
+          Show More
+        </button>
+      </div>
+      
       )}
     </div>
   );

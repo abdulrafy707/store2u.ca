@@ -107,7 +107,7 @@ const Products = () => {
 
           return (
             <div key={category.id} className="mb-12">
-              <h3 className="text-xl text-gray-800 font-normal mt-4 text-center md:text-left">
+              <h3 className="text-xl text-gray-800 font-normal mb-5 mt-4 text-center md:text-left">
                 {category.name}
               </h3>
 

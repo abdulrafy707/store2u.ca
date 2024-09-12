@@ -41,13 +41,13 @@ const TopCategories = () => {
             onClick={() => handleCategoryClick(category.id)}
             whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)" }}
             transition={{ duration: 0.3 }}
-            style={{ minHeight: '150px' }} // Adjust the minHeight value as needed
+            style={{ minHeight: '200px' }} // Adjust the minHeight value as needed
           >
             {category.imageUrl ? (
               <motion.img
                 src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
                 alt={category.name}
-                className="w-full h-32 object-cover mb-2" // Decreased height
+                className="w-full h-40 object-cover mb-2" // Decreased height
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.3 }}
                 onError={(e) => {

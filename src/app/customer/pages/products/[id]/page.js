@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import { addToCart, setCart } from '@/app/store/cartSlice';
 import { ThreeDots } from 'react-loader-spinner';
 import Modal from 'react-modal';
+import { FiMinus, FiPlus } from 'react-icons/fi';
+
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -152,7 +154,7 @@ const ProductPage = () => {
       <ToastContainer />
       <div className="flex flex-wrap pt-4">
         {/* Product Images and Details */}
-        <div className="w-full lg:w-1/2 justify-between items-center mb-8 lg:mb-0 flex">
+        <div className="w-full lg:w-3/5 justify-between items-center mb-8 lg:mb-0 flex">
           <div className="flex w-20 flex-col justify-center items-center mr-4">
             {product.images && product.images.map((image, index) => (
               <img
@@ -182,7 +184,7 @@ const ProductPage = () => {
         </div>
 
         {/* Product Info and Add to Cart */}
-        <div className="w-full lg:w-1/2">
+        <div className="w-full lg:w-2/5">
           <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
           <div className="flex items-center mb-4">
             {product.discount ? (
@@ -200,7 +202,7 @@ const ProductPage = () => {
           {product.stock > 0 && <p className="text-lg font-bold text-green-700 mb-1">In Stock</p>}
 
           {/* Product Description */}
-          <div className="text-gray-500 mb-4" dangerouslySetInnerHTML={{ __html: product.description }}></div>
+          
 
           {/* Color and Size Selection */}
           {colors.length > 0 && (
@@ -245,39 +247,41 @@ const ProductPage = () => {
             </div>
           )}
                     {/* Quantity Selector */}
-                    <div className="flex items-center mb-4">
-            <button
-              className="bg-gray-300 text-gray-700 px-2 py-1 rounded-l"
-              onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-            >
-              -
-            </button>
-            <input
-              type="text"
-              readOnly
-              value={quantity}
-              className="w-12 text-center text-black border-gray-300 border-y"
-            />
-            <button
-              className="bg-gray-300 text-gray-700 px-2 py-1 rounded-r"
-              onClick={() => setQuantity((prev) => prev + 1)}
-            >
-              +
-            </button>
-          </div>
+                   {/* Quantity Selector */}
+<div className="flex items-center mb-4 border border-gray-300 rounded-full px-4 py-1 w-32">
+  <button
+    className="text-gray-700 px-2"
+    onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+    disabled={quantity <= 1}
+  >
+    <FiMinus />
+  </button>
+  <span className="mx-4">{quantity}</span>
+  <button
+    className="text-gray-700 px-2"
+    onClick={() => setQuantity((prev) => prev + 1)}
+  >
+    <FiPlus />
+  </button>
+</div>
+
 
           {/* Add to Cart Button */}
-          <button
-            className="bg-teal-500 text-white py-2 px-4 rounded-md"
-            onClick={() => handleAddToCart(product)}
-          >
-            Add to cart
-          </button>
+         {/* Add to Cart Button */}
+<button
+  className="bg-teal-500 text-white py-2 px-4 rounded-md w-full"
+  onClick={() => handleAddToCart(product)}
+>
+  Add to cart
+</button>
+<h3 className='text-md  font-semibold text-gray-700 mb-4 mt-4'>Description</h3>
+<div className="text-gray-500 mb-4" dangerouslySetInnerHTML={{ __html: product.description }}></div>
+
         </div>
       </div>
 
       {/* Related Products Section */}
-      <div className="mt-12">
+      <div className="mt-12 mb-8">
         <h3 className="text-2xl font-semibold mb-6">Related Products</h3>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
 
@@ -351,7 +355,7 @@ const ProductPage = () => {
       </div>
 
       {/* Modal for Related Products */}
-<Modal
+      <Modal
   isOpen={isModalOpen}
   onRequestClose={handleCloseModal}
   contentLabel="Related Products"
@@ -382,15 +386,17 @@ const ProductPage = () => {
         ✕
       </button>
     </div>
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
       {relatedProducts.map((product) => (
-        <div key={product.id} className="flex flex-col items-center">
+        <div key={product.id} className="flex flex-col items-center w-32">
           <img
             src={getImageUrl(product.images[0].url)}
             alt={product.name}
             className="w-32 h-32 object-cover mb-2"
           />
-          <p className="text-sm">{product.name}</p>
+          <p className="text-sm text-gray-800 truncate w-full" title={product.name}>
+            {product.name}
+          </p>
           <p className="text-sm text-red-500">Rs.{product.price}</p>
         </div>
       ))}
@@ -403,6 +409,8 @@ const ProductPage = () => {
     </button>
   </div>
 </Modal>
+
+
     </div>
   );
 };

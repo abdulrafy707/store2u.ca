@@ -26,26 +26,26 @@ const FaqSection = () => {
       question: "What is your return policy?",
       answer: "We offer a 30-day return policy for most products. Items must be unused, in the same condition that you received them, and in the original packaging. Please contact our customer support team to initiate a return."
     },
-    {
-      question: "How do I contact customer support?",
-      answer: "You can reach our customer support team via email at support@store2u.com or by phone at +92 312 8807795. We are available Monday to Friday from 9 AM to 6 PM."
-    },
-    {
-      question: "Do you offer international shipping?",
-      answer: "Yes, we offer international shipping to many countries. Shipping rates and delivery times vary based on the destination. Please check our shipping policy for more details."
-    },
-    {
-      question: "Can I change or cancel my order?",
-      answer: "If you need to change or cancel your order, please contact our customer support team as soon as possible. We will do our best to accommodate your request, but please note that orders that have already been shipped cannot be modified or canceled."
-    },
-    {
-      question: "Do you have a physical store?",
-      answer: "No, Store2U operates exclusively online to offer you the best prices and convenience. You can shop with us anytime, anywhere."
-    },
-    {
-      question: "What are your shipping rates?",
-      answer: "Shipping rates vary based on the destination and the weight of the package. You can view the shipping cost at checkout before completing your purchase."
-    }
+    // {
+    //   question: "How do I contact customer support?",
+    //   answer: "You can reach our customer support team via email at support@store2u.com or by phone at +92 312 8807795. We are available Monday to Friday from 9 AM to 6 PM."
+    // },
+    // {
+    //   question: "Do you offer international shipping?",
+    //   answer: "Yes, we offer international shipping to many countries. Shipping rates and delivery times vary based on the destination. Please check our shipping policy for more details."
+    // },
+    // {
+    //   question: "Can I change or cancel my order?",
+    //   answer: "If you need to change or cancel your order, please contact our customer support team as soon as possible. We will do our best to accommodate your request, but please note that orders that have already been shipped cannot be modified or canceled."
+    // },
+    // {
+    //   question: "Do you have a physical store?",
+    //   answer: "No, Store2U operates exclusively online to offer you the best prices and convenience. You can shop with us anytime, anywhere."
+    // },
+    // {
+    //   question: "What are your shipping rates?",
+    //   answer: "Shipping rates vary based on the destination and the weight of the package. You can view the shipping cost at checkout before completing your purchase."
+    // }
   ];
 
   const toggleFAQ = (index) => {
