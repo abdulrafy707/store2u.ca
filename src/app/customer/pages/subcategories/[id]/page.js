@@ -147,8 +147,8 @@ const SubcategoryPage = () => {
                 </div>
                 <div className="px-2">
                  
-                  <div className="grid grid-cols-2 py-2 pl-2 ml-2">
-                    <div className="flex pl-2  ml-2 items-center">
+                  <div className="grid grid-cols-2 py-2 ">
+                    <div className="flex    items-center">
                       {product.discount ? (
                         <div className="flex items-center justify-center gap-3 flex-row-reverse">
                           <p className="text-xs px-2 mx-2 font-normal text-gray-700 line-through">Rs.{product.price}</p>
