@@ -101,7 +101,9 @@ const Products = () => {
           if (categoryProducts.length === 0) return null;
 
           const currentProductIndex = productIndices[category.id] || 0;
-          const visibleProducts = categoryProducts.slice(currentProductIndex, currentProductIndex + 4);
+          const visibleProducts = categoryProducts.slice(currentProductIndex, currentProductIndex + (window.innerWidth < 640 ? 2 : 4));
+
+
 
           return (
             <div key={category.id} className="mb-12">
@@ -129,7 +131,10 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                  <div className="products-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
+
+
+
                     {visibleProducts.map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
