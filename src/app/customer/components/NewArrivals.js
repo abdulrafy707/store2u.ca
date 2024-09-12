@@ -10,6 +10,7 @@ import { addToCart } from '../../store/cartSlice';
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
+  const [visibleProducts, setVisibleProducts] = useState(12); // Show 12 products initially
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -37,6 +38,10 @@ const NewArrivals = () => {
     alert(`${product.name} has been added to the cart.`);
   };
 
+  const showMoreProducts = () => {
+    setVisibleProducts((prevVisibleProducts) => prevVisibleProducts + 12); // Load 12 more products
+  };
+
   const calculateOriginalPrice = (price, discount) => {
     if (typeof price === 'number' && typeof discount === 'number') {
       return price - price * (discount / 100);
@@ -60,18 +65,17 @@ const NewArrivals = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 
-
-
-        {products.map((product) => {
+      {/* Grid with increased width on larger screens */}
+      <div className="rounded grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-2 sm:px-4 lg:px-0">
+        {products.slice(0, visibleProducts).map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (
             <div
               key={product.id}
-              className="bg-white shadow-md rounded-sm cursor-pointer border border-gray-300 relative h-[320px] w-full min-w-[200px]"
+              className="bg-white shadow-md rounded-sm cursor-pointer border border-gray-300 relative min-h-[320px] w-full"
             >
               {product.discount && (
                 <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
@@ -104,7 +108,6 @@ const NewArrivals = () => {
                 </button>
               </div>
               <div className="px-2">
-                
                 <div className="grid grid-cols-2 py-2">
                   <div className="flex items-center">
                     {product.discount ? (
@@ -120,7 +123,6 @@ const NewArrivals = () => {
                       <p className="text-sm font-normal text-gray-700">Rs.{product.price}</p>
                     )}
                   </div>
-                  
                 </div>
                 <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
                   {product.name}
@@ -130,6 +132,17 @@ const NewArrivals = () => {
           );
         })}
       </div>
+
+      {visibleProducts < products.length && (
+        <div className="text-center mt-6">
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+            onClick={showMoreProducts}
+          >
+            Show More
+          </button>
+        </div>
+      )}
     </div>
   );
 };

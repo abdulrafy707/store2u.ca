@@ -101,36 +101,37 @@ const CartPage = () => {
     <div className="container text-black bg-white mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="w-full lg:w-3/5 border border-gray-300 rounded p-4">
-          <h2 className="text-2xl font-semibold mb-6">Your Cart</h2>
+          <h2 className="text-2xl pl-4 font-semibold ">Your Cart</h2>
           <div className="flex flex-col gap-4">
             {cart.map((item, index) => (
-              <div key={index} className="bg-white shadow-lg rounded-lg p-4 flex items-center justify-between">
+              <div key={index} className="bg-white shadow-lg rounded-lg  flex items-start pl-4 pt-6 mt-4 justify-between">
                 {item.images && item.images.length > 0 ? (
                   <img
                     src={`https://data.tascpa.ca/uploads/${item.images[0].url}`}
                     alt={item.name}
-                    className="h-16 w-16 object-cover rounded mr-4"
+                    className="h-20 w-20 object-cover rounded mr-4 border border-gray-400"
                   />
                 ) : (
                   <div className="h-16 w-16 bg-gray-200 rounded flex items-center justify-center text-gray-500 mr-4">
                     No Image
                   </div>
                 )}
-                <div className="flex-grow">
+                <div className="flex-grow pr-4">
                   <div className='flex justify-between items-center w-full'>
-                    <h3 className="text-md font-semibold">{item.name}</h3>
-                    <p className="text-md font-medium text-gray-700">Rs.{item.price}</p>
+                    <h3 className="text-sm font-normal text-gray-600">{item.name}</h3>
+                    <p className="text-sm font-normal text-gray-600">Rs.{item.price}</p>
                   </div>
-                  <p className="text-md font-medium text-gray-700">Size: {item.selectedSize || 'N/A'}</p>
-                  <p className="text-md font-medium text-gray-700">Color: {item.selectedColor || 'N/A'}</p>
+                  <p className="text-sm font-normal text-gray-600">Size: {item.selectedSize || 'N/A'}</p>
+                  <p className="text-sm font-normal text-gray-600">Color: {item.selectedColor || 'N/A'}</p>
                   <div className="flex items-center justify-end mt-2">
                     <button
-                      className="pr-4 underline"
+                      className="pr-4 pb-4 underline"
                       onClick={() => handleRemoveFromCart(item.id)}
                     >
                       remove
                     </button>
-                    <div className="flex items-center border border-gray-300 rounded-full px-4 py-1">
+                    <div className='pb-4'>
+                    <div className="flex items-center border border-gray-300 rounded-full px-4  py-1">
                       <button
                         className="text-gray-700 px-2"
                         onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
@@ -146,6 +147,7 @@ const CartPage = () => {
                         <FiPlus />
                       </button>
                     </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -153,10 +155,10 @@ const CartPage = () => {
           </div>
         </div>
         <div className="w-full lg:w-2/5 border rounded border-gray-300 p-4">
-          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+          <h2 className=" font-semibold mb-4">Order Summary</h2>
           <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
             <div className="flex justify-between">
-              <p className="text-xl font-bold text-gray-700">Subtotal:</p>
+              <p className="text-md font-semibold text-gray-700">Subtotal:</p>
               <p className="text-md text-gray-700">Rs.{subtotal.toFixed(2)}</p>
             </div>
             {/* <div className="flex justify-between">
@@ -165,7 +167,7 @@ const CartPage = () => {
             </div> */}
             <hr className="h-2"></hr>
             <div className="flex justify-between">
-              <p className="text-xl font-bold text-gray-700">Total:</p>
+              <p className="text-md font-semibold text-gray-700">Total:</p>
               <p className="text-md text-gray-700">Rs.{total.toFixed(2)}</p>
             </div>
             <button
