@@ -62,7 +62,7 @@ const DiscountedProducts = () => {
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-bold mb-6">Offers</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-6">
         {products.map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (

@@ -67,7 +67,7 @@ const TopRatedProducts = () => {
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-semibold mb-6">Top Rated</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
   {products.slice(0, visibleProducts).map((product) => {
     const originalPrice = calculateOriginalPrice(product.price, product.discount);
     return (
