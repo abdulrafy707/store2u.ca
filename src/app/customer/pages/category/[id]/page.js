@@ -335,7 +335,7 @@ const CategoryPage = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
       <h2 className="text-2xl font-semibold mb-6">{category?.name} Subcategories</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {subcategories.map((subcategory, index) => (
           <motion.div
             key={subcategory.id}

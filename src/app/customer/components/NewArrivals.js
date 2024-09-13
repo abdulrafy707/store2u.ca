@@ -69,7 +69,8 @@ const NewArrivals = () => {
       <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
 
       {/* Grid with increased width on larger screens */}
-      <div className="rounded grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-2 sm:px-4 lg:px-0">
+      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-1 sm:px-4 lg:px-0">
+
         {products.slice(0, visibleProducts).map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (

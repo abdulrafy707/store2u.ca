@@ -283,7 +283,8 @@ const ProductPage = () => {
       {/* Related Products Section */}
       <div className="mt-12 mb-8">
         <h3 className="text-2xl font-semibold mb-6">Related Products</h3>
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-1 sm:px-4 lg:px-0">
+
 
   {relatedProducts.length > 0 ? (
     relatedProducts.map((relatedProduct) => {
@@ -291,7 +292,7 @@ const ProductPage = () => {
       return (
         <div
           key={relatedProduct.id}
-          className="bg-white shadow-md cursor-pointer border border-gray-300 relative h-[320px] w-full min-w-[200px]"
+          className="bg-white shadow-md rounded-sm cursor-pointer border border-gray-300 relative min-h-[320px] w-full"
           onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
         >
           {relatedProduct.discount && (

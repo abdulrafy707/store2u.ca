@@ -65,11 +65,11 @@ const TopRatedProducts = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto py-8 px-2 sm:px-4 lg:px-8">
       <h2 className="text-2xl font-bold mb-6">Top Rated</h2>
 
-      {/* Grid with increased width on larger screens */}
-      <div className="rounded grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-2 sm:px-4 lg:px-0">
+      {/* Grid setup for 2 columns on mobile, 3 for medium, and 4-6 on larger screens */}
+      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-1 sm:px-4 lg:px-0">
         {products.slice(0, visibleProducts).map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (
@@ -136,14 +136,13 @@ const TopRatedProducts = () => {
       {/* Show "Show More" Button if there are more products to display */}
       {visibleProducts < products.length && (
         <div className="text-center mt-6">
-        <button
-          className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
-          onClick={showMoreProducts}
-        >
-          Show More
-        </button>
-      </div>
-      
+          <button
+            className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
+            onClick={showMoreProducts}
+          >
+            Show More
+          </button>
+        </div>
       )}
     </div>
   );
