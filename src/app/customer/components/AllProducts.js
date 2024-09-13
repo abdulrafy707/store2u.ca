@@ -115,18 +115,31 @@ const TopRatedProducts = () => {
                         <p className="text-xs font-normal text-gray-700 line-through">
                           Rs.{product.price}
                         </p>
-                        <p className="text-sm font-semibold text-red-700">
+                        <p className="text-sm font-bold text-red-700">
                           Rs.{originalPrice}
                         </p>
                       </div>
                     ) : (
-                      <p className="text-sm font-normal text-gray-700">Rs.{product.price}</p>
+                      <p className="text-sm font-bold text-gray-700">
+                        {/* Bold the price */}
+                        Rs.{product.price}
+                      </p>
                     )}
                   </div>
                 </div>
-                <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {product.name}
-                </h3>
+                {/* Product name with two-line clamp */}
+                <h3
+  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
+  style={{
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2, // Limits to 2 lines
+    maxHeight: '3em', // Approximate height for 2 lines
+  }}
+>
+  {product.name}
+</h3>
+
               </div>
             </div>
           );

@@ -41,7 +41,7 @@ const TopCategories = () => {
             onClick={() => handleCategoryClick(category.id)}
             whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.1)" }}
             transition={{ duration: 0.3 }}
-            style={{ minHeight: '200px' }} // Adjust the minHeight value as needed
+            style={{ minHeight: '210px' }} // Adjust the minHeight value as needed
           >
             {category.imageUrl ? (
               <motion.img

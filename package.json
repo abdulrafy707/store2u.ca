@@ -17,6 +17,7 @@
     "@heroicons/react": "^2.1.5",
     "@prisma/client": "^5.17.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",

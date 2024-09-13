@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
+import { motion } from 'framer-motion'; // Import framer-motion
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
@@ -101,9 +102,10 @@ const Products = () => {
           if (categoryProducts.length === 0) return null;
 
           const currentProductIndex = productIndices[category.id] || 0;
-          const visibleProducts = categoryProducts.slice(currentProductIndex, currentProductIndex + (window.innerWidth < 640 ? 2 : 4));
-
-
+          const visibleProducts = categoryProducts.slice(
+            currentProductIndex,
+            currentProductIndex + (window.innerWidth < 640 ? 2 : 4)
+          );
 
           return (
             <div key={category.id} className="mb-12">
@@ -131,10 +133,7 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
-
-
-
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
                     {visibleProducts.map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
@@ -152,14 +151,16 @@ const Products = () => {
                           )}
                           <div className="relative">
                             {product.images && product.images.length > 0 ? (
-                              <img
+                              <motion.img
                                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                                 alt={product.name}
-                                className="h-[240px] w-full object-cover mb-4 rounded bg-white"
+                                className="h-[220px] w-full object-cover mb-4 rounded bg-white"
+                                whileHover={{ scale: 1.1 }} // Apply motion effect on hover
+                                transition={{ duration: 0.3 }} // Smooth transition
                                 onClick={() => handleProductClick(product.id)}
                               />
                             ) : (
-                              <div className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
+                              <div className="h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
                                 No Image
                               </div>
                             )}
@@ -171,29 +172,35 @@ const Products = () => {
                             </button>
                           </div>
                           <div className="px-2">
-                            
                             <div className="grid grid-cols-2 px-0 py-2">
                               <div className="flex items-center">
                                 {product.discount ? (
-                                  <div className="flex items-center justify-center  gap-3 flex-row-reverse">
-                                    <p className="text-xs font-normal text-gray-700 line-through ">
+                                  <div className="flex items-center justify-center gap-3 flex-row-reverse">
+                                    <p className="text-xs font-normal text-gray-700 line-through">
                                       Rs.{product.price}
                                     </p>
-                                    <p className="text-sm font-semibold text-red-700">
+                                    <p className="text-sm font-bold text-red-700">
                                       Rs.{originalPrice}
                                     </p>
                                   </div>
                                 ) : (
-                                  <p className="text-sm font-normal text-gray-700">
+                                  <p className="text-sm font-bold text-gray-700">
                                     Rs.{product.price}
                                   </p>
                                 )}
                               </div>
                             </div>
-                            <h3 className="text-sm font-normal text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                            <h3
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                            >
                               {product.name}
                             </h3>
-
                           </div>
                         </div>
                       );
