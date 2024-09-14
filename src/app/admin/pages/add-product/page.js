@@ -133,7 +133,7 @@ const AddProductPageContent = () => {
         ...newProduct,
         description: newProduct.richDescription, // Directly save the rich text HTML content
         price: parseFloat(newProduct.price),
-        stock: parseInt(newProduct.stock),
+        stock: parseInt(newProduct.stock, 10), // Convert stock to a number
         subcategoryId: parseInt(newProduct.subcategoryId),
         colors: JSON.stringify(newProduct.colors), // Store as JSON string with value and label
         sizes: JSON.stringify(newProduct.sizes), // Store as JSON string with value and label
@@ -320,14 +320,21 @@ const AddProductPageContent = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Stock</label>
-              <input
-                type="number"
-                value={newProduct.stock}
-                onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
-                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+  <label className="block text-sm font-medium text-gray-700">Stock</label>
+  <input
+    type="number"
+    value={newProduct.stock !== null ? newProduct.stock.toString() : ''}
+    min="0" // Prevents the stock from being less than 0 in the input itself
+    onChange={(e) => {
+      const value = parseInt(e.target.value, 10);
+      if (value >= 0) { // Ensure stock is not negative
+        setNewProduct({ ...newProduct, stock: value });
+      }
+    }}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Discount</label>
               <input

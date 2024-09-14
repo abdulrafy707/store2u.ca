@@ -41,7 +41,8 @@ const Sidebar = ({ setActiveComponent }) => {
   };
 
   return (
-    <div className="bg-gray-700 text-white w-64 min-h-screen flex flex-col text-sm">
+    <div className="bg-gray-700 text-white min-h-screen flex flex-col text-sm" style={{ width: '250px' }}>
+
       <div className="p-4 text-center">
         <img width={100} height={100} src="/store2ulogo.png" alt="Profile" className="rounded-full mx-auto mb-2" />
         <h2 className="text-lg font-semibold">Store2u</h2>
@@ -56,7 +57,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaUsers className="h-5 w-5" />
               <span className="ml-2">Customers</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.customers && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -78,14 +81,16 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaCube className="h-5 w-5" />
               <span className="ml-2">Products</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.products && (
               <ul className="ml-8 mt-2 space-y-2">
                 <li>
                   <a href='/admin/pages/Products'>
                     <button className="flex items-center p-2 hover:bg-blue-700 rounded">
-                      <span className="ml-2">All Products</span>
+                      <span className="ml-2 text-md">All Products</span>
                     </button>
                   </a>
                 </li>
@@ -107,7 +112,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaShoppingCart className="h-5 w-5" />
               <span className="ml-2">Orders</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.orders && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -129,7 +136,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaTags className="h-5 w-5" />
               <span className="ml-2">Categories</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.categories && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -158,7 +167,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaRuler className="h-5 w-5" />
               <span className="ml-2">Size</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.size && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -180,7 +191,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaPaintBrush className="h-5 w-5" />
               <span className="ml-2">Color</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.color && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -202,7 +215,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaCogs className="h-5 w-5" />
               <span className="ml-2">Settings</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.settings && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -224,7 +239,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaTicketAlt className="h-5 w-5" />
               <span className="ml-2">Coupons</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.coupons && (
               <ul className="ml-8 mt-2 space-y-2">
@@ -246,7 +263,9 @@ const Sidebar = ({ setActiveComponent }) => {
             >
               <FaImages className="h-5 w-5" />
               <span className="ml-2">Slider</span>
-              <FaChevronDown className="h-5 w-5 ml-auto" />
+              <FaChevronDown className="h-3 w-3 ml-auto" />
+
+
             </button>
             {isDropdownOpen.sliders && (
               <ul className="ml-8 mt-2 space-y-2">

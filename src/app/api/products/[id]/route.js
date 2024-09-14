@@ -17,6 +17,9 @@ export async function PUT(request, { params }) {
       isTopRated = false
     } = await request.json();
 
+    // Ensure stock is a valid integer
+    const validStock = Number.isInteger(stock) ? stock : parseInt(stock, 10);
+
     // Use toFixed to round the discount to two decimal places before saving
     const roundedDiscount = discount ? parseFloat(discount.toFixed(2)) : null;
 
@@ -27,7 +30,7 @@ export async function PUT(request, { params }) {
         name,
         description,
         price: parseFloat(price),
-        stock: parseInt(stock),
+        stock: validStock, // Ensure valid integer stock
         subcategoryId: subcategoryId ? parseInt(subcategoryId) : null,
         colors: colors ? JSON.stringify(colors) : null,
         sizes: sizes ? JSON.stringify(sizes) : null,
@@ -62,7 +65,6 @@ export async function PUT(request, { params }) {
     );
   }
 }
-
 
 
 

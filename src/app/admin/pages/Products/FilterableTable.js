@@ -8,7 +8,14 @@ import Select from 'react-select';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-const FilterableTable = ({ products = [], fetchProducts, categories = [], subcategories = [], colors = [], sizes = [] }) => {
+const FilterableTable = ({
+  products = [],
+  fetchProducts,
+  categories = [],
+  subcategories = [],
+  colors = [],
+  sizes = [],
+}) => {
   const [filter, setFilter] = useState('');
   const [filteredData, setFilteredData] = useState(products);
   const [filteredSubcategories, setFilteredSubcategories] = useState([]);
@@ -47,7 +54,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
   useEffect(() => {
     if (subcategories.length) {
       setFilteredSubcategories(
-        subcategories.filter((subcat) => subcat.categoryId === parseInt(selectedCategory))
+        subcategories.filter(
+          (subcat) => subcat.categoryId === parseInt(selectedCategory)
+        )
       );
     } else {
       setFilteredSubcategories([]);
@@ -87,16 +96,20 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
 
   const handleEditItem = (item) => {
     setEditProduct(item);
-  
+
     // Get the existing colors and sizes for this product
     const existingColors = colors
       .filter((color) => item.colors.includes(color.id))
-      .map((color) => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex }));
-  
+      .map((color) => ({
+        value: color.id,
+        label: `${color.name} (${color.hex})`,
+        hex: color.hex,
+      }));
+
     const existingSizes = sizes
       .filter((size) => item.sizes.includes(size.id))
       .map((size) => ({ value: size.id, label: size.name }));
-  
+
     setProductForm({
       name: item.name,
       description: item.description,
@@ -114,7 +127,21 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
 
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setProductForm({ ...productForm, [name]: type === 'checkbox' ? checked : value });
+
+    let newValue;
+    if (type === 'checkbox') {
+      newValue = checked;
+    } else if (name === 'stock') {
+      const parsedValue = parseInt(value, 10);
+      newValue = isNaN(parsedValue) ? '' : Math.max(0, parsedValue);
+    } else {
+      newValue = value;
+    }
+
+    setProductForm({
+      ...productForm,
+      [name]: newValue,
+    });
   };
 
   const convertToBase64 = (file) => {
@@ -125,6 +152,7 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
       reader.onerror = (error) => reject(error);
     });
   };
+
   const roundToTwoDecimalPlaces = (num) => {
     return Math.round(num * 100) / 100;
   };
@@ -134,29 +162,41 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
     setIsLoading(true);
 
     try {
-      const uploadedImages = await Promise.all([...fileInputRef.current.files].map(async (file) => {
-        const imageBase64 = await convertToBase64(file);
-        const response = await fetch('https://data.tascpa.ca/uploadImage.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ image: imageBase64 }),
-        });
-        const result = await response.json();
-        if (response.ok) {
-          return result.image_url;
-        } else {
-          throw new Error(result.error || 'Failed to upload image');
-        }
-      }));
+      const uploadedImages = await Promise.all(
+        [...fileInputRef.current.files].map(async (file) => {
+          const imageBase64 = await convertToBase64(file);
+          const response = await fetch(
+            'https://data.tascpa.ca/uploadImage.php',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ image: imageBase64 }),
+            }
+          );
+          const result = await response.json();
+          if (response.ok) {
+            return result.image_url;
+          } else {
+            throw new Error(result.error || 'Failed to upload image');
+          }
+        })
+      );
+
+      const stockValue = parseInt(productForm.stock, 10);
 
       const productData = {
         ...productForm,
-        images: [...existingImages.map((img) => img.url), ...uploadedImages],
+        stock: isNaN(stockValue) ? 0 : stockValue,
+        images: [
+          ...existingImages.map((img) => img.url),
+          ...uploadedImages,
+        ],
         discount: productForm.discount ? productForm.discount : null,
-
         isTopRated: productForm.isTopRated,
+        colors: productForm.colors.map((color) => color.value),
+        sizes: productForm.sizes.map((size) => size.value),
       };
 
       const response = await fetch(`/api/products/${editProduct.id}`, {
@@ -209,11 +249,16 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setProductForm({ ...productForm, images: [...productForm.images, ...files] });
+    setProductForm({
+      ...productForm,
+      images: [...productForm.images, ...files],
+    });
   };
 
   const handleRemoveExistingImage = (index) => {
-    setExistingImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setExistingImages((prevImages) =>
+      prevImages.filter((_, i) => i !== index)
+    );
   };
 
   const handleRemoveImage = (index) => {
@@ -231,9 +276,12 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
       {isPopupVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Are you sure?</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Are you sure?
+            </h2>
             <p className="text-gray-600 mb-6">
-              If you delete this product, all orders related to this product will also be deleted. This action cannot be undone.
+              If you delete this product, all orders related to this product
+              will also be deleted. This action cannot be undone.
             </p>
             <div className="flex justify-end space-x-4">
               <button
@@ -259,7 +307,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
       )}
       <div className="bg-white shadow rounded-lg p-4 relative">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Products List</h2>
+          <h2 className="text-xl font-semibold text-gray-800">
+            Products List
+          </h2>
           <div className="flex space-x-2">
             <button
               className="text-gray-600 hover:text-gray-900 focus:outline-none"
@@ -287,7 +337,7 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
           </div>
         )}
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -319,7 +369,10 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
             <tbody className="bg-white divide-y divide-gray-200">
               {Array.isArray(filteredData) &&
                 filteredData.map((item, index) => (
-                  <tr key={item.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <tr
+                    key={item.id}
+                    className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.images && item.images.length > 0 ? (
                         <img
@@ -334,10 +387,14 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {item.id}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{item.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {item.name}
+                    </td>
                     <td
                       className="px-6 py-4 text-sm text-gray-500"
-                      dangerouslySetInnerHTML={{ __html: item.description }}
+                      dangerouslySetInnerHTML={{
+                        __html: item.description,
+                      }}
                     ></td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.price}
@@ -375,7 +432,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
             <h2 className="text-xl mb-4">Edit Product</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Name
+                </label>
                 <input
                   type="text"
                   name="name"
@@ -385,14 +444,20 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Description
+                </label>
                 <ReactQuill
                   value={productForm.description}
-                  onChange={(value) => setProductForm({ ...productForm, description: value })}
+                  onChange={(value) =>
+                    setProductForm({ ...productForm, description: value })
+                  }
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Price</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Price
+                </label>
                 <input
                   type="number"
                   name="price"
@@ -402,33 +467,50 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Stock</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Stock
+                </label>
                 <input
                   type="number"
                   name="stock"
-                  value={productForm.stock}
+                  value={
+                    productForm.stock !== null
+                      ? productForm.stock.toString()
+                      : ''
+                  }
+                  min="0"
                   onChange={handleFormChange}
                   className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Discount</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Discount
+                </label>
                 <input
-  type="number"
-  name="discount"
-  value={productForm.discount ? productForm.discount.toFixed(2) : 0} // Show rounded value
-  step="0.01" // Allow entering decimal values
-  onChange={(e) => setProductForm({ 
-    ...productForm, 
-    discount: roundToTwoDecimalPlaces(parseFloat(e.target.value) || 0) 
-  })}
-/>
-
-
-
+                  type="number"
+                  name="discount"
+                  value={
+                    productForm.discount
+                      ? productForm.discount.toFixed(2)
+                      : ''
+                  }
+                  step="0.01"
+                  onChange={(e) =>
+                    setProductForm({
+                      ...productForm,
+                      discount: roundToTwoDecimalPlaces(
+                        parseFloat(e.target.value) || 0
+                      ),
+                    })
+                  }
+                  className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Top Rated</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Top Rated
+                </label>
                 <input
                   type="checkbox"
                   name="isTopRated"
@@ -438,7 +520,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Subcategory</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Subcategory
+                </label>
                 <select
                   name="subcategoryId"
                   value={productForm.subcategoryId}
@@ -454,13 +538,21 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Colors</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Colors
+                </label>
                 <Select
                   isMulti
                   name="colors"
                   value={productForm.colors}
-                  onChange={(selected) => setProductForm({ ...productForm, colors: selected })}
-                  options={colors.map((color) => ({ value: color.id, label: `${color.name} (${color.hex})`, hex: color.hex }))}
+                  onChange={(selected) =>
+                    setProductForm({ ...productForm, colors: selected })
+                  }
+                  options={colors.map((color) => ({
+                    value: color.id,
+                    label: `${color.name} (${color.hex})`,
+                    hex: color.hex,
+                  }))}
                   getOptionLabel={(color) => (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span
@@ -480,7 +572,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
               </div>
               {productForm.colors.length > 0 && (
                 <div className="mb-4">
-                  <h4 className="text-md font-medium mb-2">Selected Colors</h4>
+                  <h4 className="text-md font-medium mb-2">
+                    Selected Colors
+                  </h4>
                   <div className="flex space-x-2">
                     {productForm.colors.map((color, index) => (
                       <div key={index} className="relative">
@@ -501,17 +595,26 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 </div>
               )}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Sizes</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Sizes
+                </label>
                 <Select
                   isMulti
                   name="sizes"
                   value={productForm.sizes}
-                  onChange={(selected) => setProductForm({ ...productForm, sizes: selected })}
-                  options={sizes.map((size) => ({ value: size.id, label: size.name }))}
+                  onChange={(selected) =>
+                    setProductForm({ ...productForm, sizes: selected })
+                  }
+                  options={sizes.map((size) => ({
+                    value: size.id,
+                    label: size.name,
+                  }))}
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Images</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Images
+                </label>
                 <input
                   type="file"
                   name="images"
@@ -522,7 +625,9 @@ const FilterableTable = ({ products = [], fetchProducts, categories = [], subcat
                 />
               </div>
               <div className="mb-4">
-                <h4 className="text-md font-medium mb-2">Existing Images</h4>
+                <h4 className="text-md font-medium mb-2">
+                  Existing Images
+                </h4>
                 {existingImages.length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {existingImages.map((img, index) => (

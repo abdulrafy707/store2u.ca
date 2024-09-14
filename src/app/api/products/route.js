@@ -27,6 +27,7 @@ export async function POST(request) {
         description,
         price: parseFloat(price),
         stock: parseInt(stock),
+        
         subcategoryId: parseInt(subcategoryId),
         colors,
         sizes,
