@@ -170,7 +170,7 @@ const Header = () => {
               {isMegaDropdownOpen && (
                 <div
                   ref={dropdownRef}
-                  className=" absolute left-0 top-full mt-7 w-[400px] bg-white shadow-lg z-50 grid grid-cols-2"
+                  className=" absolute left-0 top-full mt-7 w-[500px] bg-white shadow-lg z-50 grid grid-cols-2"
                   onMouseLeave={handleCategoryLeave} // Close dropdown when mouse leaves
                 >
                   {/* First Column: Categories */}
@@ -197,7 +197,7 @@ const Header = () => {
                   </div>
 
                   {/* Second Column: Subcategories */}
-                  <div className="p-4 border-l h-[400px]  bg-[#BDEDEA]">
+                  <div className="p-4 border-l h-[400px]  bg-[#EBF5FA]">
   {hoveredCategory ? (
     // If a category is hovered, filter subcategories for that category
     subcategories
