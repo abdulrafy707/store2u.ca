@@ -174,7 +174,7 @@ const Header = () => {
                   onMouseLeave={handleCategoryLeave} // Close dropdown when mouse leaves
                 >
                   {/* First Column: Categories */}
-                  <div className="p-4 bg-[#EBF5FA]">
+                  <div className="p-4 bg-white">
                     {categories.map((category) => (
                       <div
                         key={category.id}
@@ -197,7 +197,7 @@ const Header = () => {
                   </div>
 
                   {/* Second Column: Subcategories */}
-                  <div className="p-4 border-l h-[400px]  bg-[#EBF5FA]">
+                  <div className="p-4 border-l h-[400px]  bg-white">
   {hoveredCategory ? (
     // If a category is hovered, filter subcategories for that category
     subcategories
