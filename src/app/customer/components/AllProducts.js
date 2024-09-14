@@ -78,10 +78,10 @@ const TopRatedProducts = () => {
               className="bg-white shadow-md rounded-sm cursor-pointer border border-gray-300 relative min-h-[320px] w-full"
             >
               {product.discount && (
-                <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-                  -{product.discount}%
-                </div>
-              )}
+  <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
+    {product.discount.toFixed(2)}% OFF
+  </div>
+)}
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
                   <motion.img

@@ -296,10 +296,10 @@ const ProductPage = () => {
           onClick={() => router.push(`/customer/pages/products/${relatedProduct.id}`)}
         >
           {relatedProduct.discount && (
-            <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-              -{relatedProduct.discount}%
-            </div>
-          )}
+  <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
+    {relatedProduct.discount.toFixed(2)}% OFF
+  </div>
+)}
           <div className="relative">
             {relatedProduct.images && relatedProduct.images.length > 0 ? (
               <motion.img

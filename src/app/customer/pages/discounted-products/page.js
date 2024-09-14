@@ -61,26 +61,28 @@ const DiscountedProducts = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <h2 className="text-2xl font-bold mb-6">Offers</h2>
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-6">
+      <h2 className="text-2xl font-bold pl-4 mb-6">Offers</h2>
+      <div className=" p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {products.map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (
             <div
               key={product.id}
-              className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] md:h-[300px] w-[220px] md:w-[200px] flex-shrink-0"
+              className="bg-white shadow-md rounded-sm  cursor-pointer border border-gray-300 relative h-[300px] w-full min-w-[150px]"
             >
-              {product.discount && (
-                <div className="absolute z-40 top-2 right-2 bg-black text-white rounded-full h-8 w-8 flex items-center justify-center">
-                  -{product.discount}%
-                </div>
-              )}
+             {product.discount && (
+  <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
+    {product.discount.toFixed(2)}% OFF
+  </div>
+)}
+
+
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
                   <motion.img
                     src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                     alt={product.name}
-                    className="h-[240px] md:h-[220px] w-full object-cover mb-4 rounded bg-white"
+                    className="h-[200px] md:h-[200px] w-full object-cover mb-4 rounded bg-white"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
                     onClick={() => handleProductClick(product.id)}
