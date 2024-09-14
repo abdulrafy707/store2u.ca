@@ -96,7 +96,7 @@ const AllProducts = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {products.length > 0 ? (
           products.map((product) => {
             const originalPrice = calculateOriginalPrice(product.price, product.discount);
@@ -157,16 +157,17 @@ const AllProducts = () => {
                   </div>
                   </div>
                   <h3
-  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
-  style={{
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2, // Limits to 2 lines
-    maxHeight: '3em', // Approximate height for 2 lines
-  }}
->
-  {product.name}
-</h3>
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              {product.name.toUpperCase()}
+                            </h3>
                 </div>
               </div>
             );

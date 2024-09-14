@@ -152,9 +152,9 @@ const ProductPage = () => {
   return (
     <div className="container mx-auto px-4">
       <ToastContainer />
-      <div className="flex flex-wrap pt-4">
+      <div className="flex flex-wrap pt-4 items-stretch min-h-screen">
         {/* Product Images and Details */}
-        <div className="w-full lg:w-3/5 justify-between items-center mb-8 lg:mb-0 flex">
+        <div className="w-full lg:w-3/5 mt-8 mb-8 lg:mb-0 flex flex-col h-full">
           <div className="flex w-20 flex-col justify-center items-center mr-4">
             {product.images && product.images.map((image, index) => (
               <img
@@ -166,7 +166,7 @@ const ProductPage = () => {
               />
             ))}
           </div>
-          <div className="relative w-full pl-4 right-0">
+          <div className="relative w-full pt-8 pl-4 right-0">
             {product.images && product.images.length > 0 ? (
               <motion.img
                 key={currentImageIndex}
@@ -184,7 +184,7 @@ const ProductPage = () => {
         </div>
 
         {/* Product Info and Add to Cart */}
-        <div className="w-full lg:w-2/5">
+        <div className="w-full lg:w-2/5 h-full flex flex-col">
           <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
           <div className="flex items-center mb-4">
             {product.discount ? (
@@ -342,16 +342,17 @@ const ProductPage = () => {
                   </div>
           </div>
           <h3
-  className="text-sm pl-2 font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
-  style={{
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2, // Limits to 2 lines
-    maxHeight: '3em', // Approximate height for 2 lines
-  }}
->
-  {product.name}
-</h3>
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              {product.name.toUpperCase()}
+                            </h3>
         </div>
       );
     })

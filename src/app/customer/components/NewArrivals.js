@@ -65,7 +65,7 @@ const NewArrivals = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto ">
       <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
 
       {/* Grid with increased width on larger screens */}
@@ -129,16 +129,18 @@ const NewArrivals = () => {
                   </div>
                 </div>
                 <h3
-  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
-  style={{
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2, // Limits to 2 lines
-    maxHeight: '3em', // Approximate height for 2 lines
-  }}
->
-  {product.name}
-</h3>
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              {product.name.toUpperCase()}
+                            </h3>
+
               </div>
             </div>
           );

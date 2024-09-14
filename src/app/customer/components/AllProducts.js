@@ -65,11 +65,12 @@ const TopRatedProducts = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-2 sm:px-4 lg:px-8">
+    <div className="max-w-screen-xl mx-auto    ">
+
       <h2 className="text-2xl font-bold mb-6">Top Rated</h2>
 
       {/* Grid setup for 2 columns on mobile, 3 for medium, and 4-6 on larger screens */}
-      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-1 sm:px-4 lg:px-0">
+      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6  sm:px-4 lg:px-0">
         {products.slice(0, visibleProducts).map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (
@@ -84,14 +85,15 @@ const TopRatedProducts = () => {
 )}
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
-                  <motion.img
-                    src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
-                    alt={product.name}
-                    className="h-[240px] w-full object-cover mb-4 rounded bg-white"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => handleProductClick(product.id)}
-                  />
+                 <motion.img
+                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
+                 alt={product.name}
+                 className="h-[240px] w-full object-cover mb-4 rounded bg-white cursor-pointer"
+                 whileHover={{ scale: 1.1 }}
+                 transition={{ duration: 0.3 }}
+                 onClick={() => handleProductClick(product.id)}
+               />
+               
                 ) : (
                   <div
                     className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
@@ -129,16 +131,19 @@ const TopRatedProducts = () => {
                 </div>
                 {/* Product name with two-line clamp */}
                 <h3
-  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
-  style={{
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2, // Limits to 2 lines
-    maxHeight: '3em', // Approximate height for 2 lines
-  }}
->
-  {product.name}
-</h3>
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              {product.name.toUpperCase()}
+                            </h3>
+
+
 
               </div>
             </div>

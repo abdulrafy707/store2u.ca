@@ -332,7 +332,7 @@ const handleInputChange = (e) => {
       <h2 className="text-2xl font-semibold mb-6">Checkout</h2>
       <form onSubmit={handlePlaceOrder}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="border p-4">
+          <div className="border p-4 h-[600px]">
             <h2 className="text-2xl font-semibold mb-4">Shipping Address</h2>
             <div className="mb-4 relative">
               <FiUser className="absolute left-3 top-3 text-gray-500 font-bold" />

@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -124,13 +125,13 @@ const CartPage = () => {
           {/* <h2 className="text-2xl pl-4 font-semibold">Your Cart</h2> */}
           <div className="flex flex-col p-4 pt-2 gap-4">
             {cart.map((item, index) => (
-              <div key={index} className="bg-white rounded-lg flex items-start pl-1 pt-4 mt-0 justify-between border border-gray-300">
+              <div key={index} className="bg-white  flex items-start pl-1 pt-4 mt-0 justify-between border-b border-gray-300">
                 {/* Product Information */}
                 {item.images && item.images.length > 0 ? (
                   <img
                     src={`https://data.tascpa.ca/uploads/${item.images[0].url}`}
                     alt={item.name}
-                    className="h-20 w-20 object-cover rounded mr-4 border border-gray-400"
+                    className="h-20 w-20 object-cover rounded mr-4 "
                   />
                 ) : (
                   <div className="h-16 w-16 bg-gray-200 rounded flex items-center justify-center text-gray-500 mr-4">
@@ -177,26 +178,32 @@ const CartPage = () => {
         </div>
 
         {/* Right Section - Order Summary */}
-        <div className="w-full lg:w-2/5 border rounded border-gray-300 h-[300px] p-4">
-          <h2 className="font-semibold mb-4">Order Summary</h2>
-          <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
-            <div className="flex justify-between">
-              <p className="text-md font-semibold text-gray-700">Subtotal:</p>
-              <p className="text-md text-gray-700">Rs.{subtotal.toFixed(2)}</p>
-            </div>
-            <hr className="h-2"></hr>
-            <div className="flex justify-between">
-              <p className="text-md font-semibold text-gray-700">Total:</p>
-              <p className="text-md text-gray-700">Rs.{total.toFixed(2)}</p>
-            </div>
-            <button
-              className="bg-teal-500 text-white py-2 px-4 rounded-md mt-4 w-full"
-              onClick={handleCheckout}
-            >
-              Checkout
-            </button>
-          </div>
-        </div>
+        <div className="w-full lg:w-2/5 p-4">
+  <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
+    <button
+      className="bg-blue-500 text-white py-2 px-4 rounded-full w-full text-lg font-semibold"
+      onClick={handleCheckout}
+    >
+      Continue to checkout
+    </button>
+    <p className="text-center text-gray-500 mt-2">
+      For the best shopping experience, 
+      <Link href="/customer/pages/register" className="text-blue-500 underline cursor-pointer">
+        sign in
+      </Link>
+    </p>
+    <hr className="my-4" />
+    <div className="flex justify-between">
+      <p className="text-md font-semibold text-gray-700">Subtotal (1 item):</p>
+      <p className="text-md text-gray-700">Rs.{subtotal.toFixed(2)}</p>
+    </div>
+    <hr className="my-4" />
+    <div className="flex justify-between">
+      <p className="text-md font-semibold text-gray-700">Estimated total:</p>
+      <p className="text-md text-gray-700">Rs.{total.toFixed(2)}</p>
+    </div>
+  </div>
+</div>
       </div>
       <ToastContainer />
     </div>

@@ -167,16 +167,17 @@ const SubcategoryPage = () => {
                   </div>
                   </div>
                   <h3
-  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
-  style={{
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2, // Limits to 2 lines
-    maxHeight: '3em', // Approximate height for 2 lines
-  }}
->
-  {product.name}
-</h3>
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                              style={{
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2, // Limits to 2 lines
+                                maxHeight: '3em', // Approximate height for 2 lines
+                              }}
+                              onClick={() => handleProductClick(product.id)}
+                            >
+                              {product.name.toUpperCase()}
+                            </h3>
                 </div>
               </div>
             );

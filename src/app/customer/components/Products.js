@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
-import { motion } from 'framer-motion'; // Import framer-motion
+import { motion } from 'framer-motion';
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
@@ -52,7 +52,10 @@ const Products = () => {
 
   const scrollRight = (categoryId, categoryProducts) => {
     setProductIndices((prevIndices) => {
-      const nextIndex = Math.min(prevIndices[categoryId] + 1, categoryProducts.length - 1);
+      const nextIndex = Math.min(
+        prevIndices[categoryId] + 1,
+        categoryProducts.length - 1
+      );
       return { ...prevIndices, [categoryId]: nextIndex };
     });
   };
@@ -108,8 +111,8 @@ const Products = () => {
           );
 
           return (
-            <div key={category.id} className="mb-12">
-              <h3 className="text-xl text-gray-800 font-normal mb-5 mt-4 text-center md:text-left">
+            <div key={category.id} className="mb-4 ">
+              <h3 className="text-xl text-gray-800 font-bold mb-10 text-center md:text-left">
                 {category.name}
               </h3>
 
@@ -133,7 +136,7 @@ const Products = () => {
                 </div>
 
                 <div className="relative">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-4">
                     {visibleProducts.map((product) => {
                       const originalPrice = calculateOriginalPrice(
                         product.price,
@@ -145,22 +148,25 @@ const Products = () => {
                           className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] flex-shrink-0"
                         >
                           {product.discount && (
-  <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
-    {product.discount.toFixed(2)}% OFF
-  </div>
-)}
+                            <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
+                              {product.discount.toFixed(2)}% OFF
+                            </div>
+                          )}
                           <div className="relative">
                             {product.images && product.images.length > 0 ? (
                               <motion.img
                                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
                                 alt={product.name}
-                                className="h-[220px] w-full object-cover mb-4 rounded bg-white"
+                                className="h-[220px] w-full object-cover mb-4 rounded bg-white cursor-pointer"
                                 whileHover={{ scale: 1.1 }} // Apply motion effect on hover
                                 transition={{ duration: 0.3 }} // Smooth transition
                                 onClick={() => handleProductClick(product.id)}
                               />
                             ) : (
-                              <div className="h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
+                              <div
+                                className="h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500 cursor-pointer"
+                                onClick={() => handleProductClick(product.id)}
+                              >
                                 No Image
                               </div>
                             )}
@@ -168,7 +174,9 @@ const Products = () => {
                               className="absolute bottom-2 right-2 bg-teal-500 text-white h-8 w-8 flex justify-center items-center rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300"
                               onClick={() => handleProductClick(product.id)}
                             >
-                              <span className="text-xl font-bold leading-none">+</span>
+                              <span className="text-xl font-bold leading-none">
+                                +
+                              </span>
                             </button>
                           </div>
                           <div className="px-2">
@@ -191,15 +199,16 @@ const Products = () => {
                               </div>
                             </div>
                             <h3
-                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400"
+                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
                               style={{
                                 display: '-webkit-box',
                                 WebkitBoxOrient: 'vertical',
                                 WebkitLineClamp: 2, // Limits to 2 lines
                                 maxHeight: '3em', // Approximate height for 2 lines
                               }}
+                              onClick={() => handleProductClick(product.id)}
                             >
-                              {product.name}
+                              {product.name.toUpperCase()}
                             </h3>
                           </div>
                         </div>
@@ -220,7 +229,9 @@ const Products = () => {
                   <button
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
                     onClick={() => scrollRight(category.id, categoryProducts)}
-                    disabled={currentProductIndex + 4 >= categoryProducts.length}
+                    disabled={
+                      currentProductIndex + 4 >= categoryProducts.length
+                    }
                   >
                     <FiChevronRight className="h-6 w-6 text-gray-700" />
                   </button>
