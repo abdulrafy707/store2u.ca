@@ -20,7 +20,6 @@ const TopRatedProducts = () => {
         const fetchedProducts = response.data.data;
         setProducts(fetchedProducts);
         setLoading(false);
-        console.log('Products fetched:', fetchedProducts.length);
       } catch (error) {
         console.error('Error fetching top-rated products:', error);
         setLoading(false);
@@ -65,12 +64,11 @@ const TopRatedProducts = () => {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto    ">
-
+    <div className="container mx-auto">
       <h2 className="text-2xl font-bold mb-6">Top Rated</h2>
 
-      {/* Grid setup for 2 columns on mobile, 3 for medium, and 4-6 on larger screens */}
-      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6  sm:px-4 lg:px-0">
+      {/* Responsive grid for product cards */}
+      <div className="rounded grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 px-1 sm:px-4 lg:px-0">
         {products.slice(0, visibleProducts).map((product) => {
           const originalPrice = calculateOriginalPrice(product.price, product.discount);
           return (
@@ -79,21 +77,20 @@ const TopRatedProducts = () => {
               className="bg-white shadow-md rounded-sm cursor-pointer border border-gray-300 relative min-h-[320px] w-full"
             >
               {product.discount && (
-  <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
-    {product.discount.toFixed(2)}% OFF
-  </div>
-)}
+                <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">
+                  {product.discount.toFixed(2)}% OFF
+                </div>
+              )}
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
-                 <motion.img
-                 src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
-                 alt={product.name}
-                 className="h-[240px] w-full object-cover mb-4 rounded bg-white cursor-pointer"
-                 whileHover={{ scale: 1.1 }}
-                 transition={{ duration: 0.3 }}
-                 onClick={() => handleProductClick(product.id)}
-               />
-               
+                  <motion.img
+                    src={`https://data.tascpa.ca/uploads/${product.images[0].url}`}
+                    alt={product.name}
+                    className="h-[240px] w-full object-cover mb-4 rounded bg-white"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                    onClick={() => handleProductClick(product.id)}
+                  />
                 ) : (
                   <div
                     className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
@@ -123,39 +120,33 @@ const TopRatedProducts = () => {
                       </div>
                     ) : (
                       <p className="text-sm font-bold text-gray-700">
-                        {/* Bold the price */}
                         Rs.{product.price}
                       </p>
                     )}
                   </div>
                 </div>
-                {/* Product name with two-line clamp */}
                 <h3
-                              className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
-                              style={{
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                WebkitLineClamp: 2, // Limits to 2 lines
-                                maxHeight: '3em', // Approximate height for 2 lines
-                              }}
-                              onClick={() => handleProductClick(product.id)}
-                            >
-                              {product.name.toUpperCase()}
-                            </h3>
-
-
-
+                  className="text-sm font-normal text-gray-800 overflow-hidden hover:underline hover:text-blue-400 cursor-pointer"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2, // Limits to 2 lines
+                    maxHeight: '3em', // Approximate height for 2 lines
+                  }}
+                  onClick={() => handleProductClick(product.id)}
+                >
+                  {product.name.toUpperCase()}
+                </h3>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Show "Show More" Button if there are more products to display */}
       {visibleProducts < products.length && (
         <div className="text-center mt-6">
           <button
-            className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
             onClick={showMoreProducts}
           >
             Show More
