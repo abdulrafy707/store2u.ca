@@ -337,10 +337,10 @@ const ProductPage = () => {
           <div className="flex items-center">
           {product.discount ? (
   <div className="flex items-center justify-center gap-3 flex-row-reverse">
-    <p className="text-xs font-normal text-gray-700 line-through">
+    <p className="text-md font-normal text-gray-700 line-through">
       Rs.{formatPrice(product.price)}  {/* Format original price */}
     </p>
-    <p className="text-sm font-bold text-red-700">
+    <p className="text-md font-bold text-red-700">
       Rs.{formatPrice(originalPrice)}  {/* Format discounted price */}
     </p>
   </div>

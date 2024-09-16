@@ -121,12 +121,12 @@ const NewArrivals = () => {
     <p className="text-xs font-normal text-gray-700 line-through">
       Rs.{formatPrice(product.price)}  {/* Format original price */}
     </p>
-    <p className="text-sm font-bold text-red-700">
+    <p className="text-md font-bold text-red-700">
       Rs.{formatPrice(originalPrice)}  {/* Format discounted price */}
     </p>
   </div>
 ) : (
-  <p className="text-sm font-bold text-gray-700">
+  <p className="text-nd font-bold text-gray-700">
     Rs.{formatPrice(product.price)}  {/* Format non-discounted price */}
   </p>
 )}

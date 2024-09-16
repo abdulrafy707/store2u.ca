@@ -173,7 +173,7 @@ const Header = () => {
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex lg:items-center lg:justify-between lg:space-x-8">
-          <div className="flex flex-col font-semibold text-black lg:flex-row text-xs lg:text-[14px] text-center lg:space-x-6">
+          <div className="flex flex-col  text-black lg:flex-row text-xs lg:text-[16px] text-center lg:space-x-6">
             {/* Department Button */}
             <div className="relative">
               <button

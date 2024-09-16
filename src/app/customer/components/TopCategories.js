@@ -63,7 +63,7 @@ const TopCategories = () => {
                 className="w-full h-32 object-cover mb-2" // Decreased height
               />
             )}
-            <p className="text-md font-normal">{category.name}</p>
+            <p className="text-md  font-semibold">{category.name}</p>
             <p className="text-gray-500">{category.tagline}</p>
           </motion.div>
         ))}
