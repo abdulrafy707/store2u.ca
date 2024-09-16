@@ -140,8 +140,9 @@ const CartPage = () => {
                 )}
                 <div className="flex-grow pr-4">
                   <div className='flex justify-between items-center w-full'>
-                    <h3 className="text-sm font-normal text-gray-600">{item.name}</h3>
-                    <p className="text-md font-bold text-black">Rs.{item.price}</p>
+                  <h3 className="text-sm text-gray-600 ">{item.name.toUpperCase()}</h3>
+
+                    <p className="text-md font-bold text-black">Rs.{item.price.toLocaleString()}</p>
                   </div>
                   <p className="text-sm font-normal text-gray-600">Size: {item.selectedSize || 'N/A'}</p>
                   <p className="text-sm font-normal text-gray-600">Color: {item.selectedColor || 'N/A'}</p>
@@ -195,12 +196,14 @@ const CartPage = () => {
     <hr className="my-4" />
     <div className="flex justify-between">
       <p className="text-md font-semibold text-gray-700">Subtotal (1 item):</p>
-      <p className="text-md text-gray-700">Rs.{subtotal.toFixed(2)}</p>
+      <p className="text-md text-gray-700">Rs.{Math.round(subtotal).toLocaleString()}</p>
+
     </div>
     <hr className="my-4" />
     <div className="flex justify-between">
       <p className="text-md font-semibold text-gray-700">Estimated total:</p>
-      <p className="text-md text-gray-700">Rs.{total.toFixed(2)}</p>
+      <p className="text-md text-gray-700">Rs.{Math.round(total).toLocaleString()}</p>
+
     </div>
   </div>
 </div>

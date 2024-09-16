@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../util/prisma';
 import jwt from 'jsonwebtoken';
+// import { sendOrderConfirmation } from '../../util/sendOrderConfirmation';
+import { sendOrderConfirmation } from '@/app/util/sendOrderConfirmation';
+
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -50,51 +53,59 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-      const { userId, shippingAddress, paymentMethod, items, total, discount = 0, tax, netTotal, couponCode = null } = await request.json();
+    const { userId, shippingAddress, paymentMethod, items, total, discount = 0, tax, netTotal, couponCode = null } = await request.json();
 
-      if (!items || items.length === 0 || !total) {
-          return NextResponse.json({ message: 'Invalid order data', status: false }, { status: 400 });
-      }
+    // Validate the required fields
+    if (!items || items.length === 0 || !total || !netTotal) {
+      return NextResponse.json({ message: 'Invalid order data', status: false }, { status: 400 });
+    }
 
-      const createdOrder = await prisma.order.create({
-          data: {
-              userId: userId || null,  // Store userId if available, otherwise null for guest orders
-              total,
-              discount,
-              tax,
-              netTotal,
-              status: 'PENDING',
-              recipientName: shippingAddress.recipientName,
-              streetAddress: shippingAddress.streetAddress,
-              apartmentSuite: shippingAddress.apartmentSuite,
-              city: shippingAddress.city,
-              state: shippingAddress.state,
-              zip: shippingAddress.zip,
-              country: shippingAddress.country,
-              phoneNumber: shippingAddress.phoneNumber,
-              email: shippingAddress.email,
-              paymentMethod,
-              paymentInfo: paymentMethod === 'Credit Card' ? JSON.stringify(paymentInfo) : null,
-              couponCode,
-              orderItems: {
-                  create: items.map(item => ({
-                      productId: item.productId,
-                      quantity: item.quantity || 1,
-                      price: item.price,
-                      selectedColor: item.selectedColor || null,
-                      selectedSize: item.selectedSize || null,
-                  })),
-              },
-          },
+    // Create the order in the database
+    const createdOrder = await prisma.order.create({
+      data: {
+        userId: userId || null,  // Store userId if available, otherwise null for guest orders
+        total,
+        discount,
+        tax,
+        netTotal,  // Make sure this field is included
+        status: 'PENDING',
+        recipientName: shippingAddress.recipientName,
+        streetAddress: shippingAddress.streetAddress,
+        apartmentSuite: shippingAddress.apartmentSuite || null,
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        zip: shippingAddress.zip,
+        country: shippingAddress.country,
+        phoneNumber: shippingAddress.phoneNumber,
+        email: shippingAddress.email,
+        paymentMethod,
+        paymentInfo: paymentMethod === 'Credit Card' ? JSON.stringify(paymentInfo) : null,
+        couponCode,
+        orderItems: {
+          create: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity || 1,
+            price: item.price,
+            selectedColor: item.selectedColor || null,
+            selectedSize: item.selectedSize || null,
+          })),
+        },
+      },
+      include: {
+        orderItems: {
           include: {
-              orderItems: true,
+            product: true,  // Include the product details for each order item
           },
-      });
+        },
+      },
+    });
 
-      return NextResponse.json({ message: 'Order placed successfully', data: createdOrder, status: true }, { status: 200 });
+    // Send back the response with the created order
+    return NextResponse.json({ message: 'Order placed successfully', data: createdOrder, status: true }, { status: 200 });
+
   } catch (error) {
-      console.error('Error placing order:', error);
-      return NextResponse.json({ message: 'Failed to place order', error: error.message, status: false }, { status: 500 });
+    console.error('Error placing order:', error);
+    return NextResponse.json({ message: 'Failed to place order', error: error.message, status: false }, { status: 500 });
   }
 }
 

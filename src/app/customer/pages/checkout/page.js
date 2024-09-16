@@ -8,6 +8,7 @@ import {jwtDecode} from 'jwt-decode'; // Note: corrected import
 import Modal from 'react-modal';
 import { toast, ToastContainer } from 'react-toastify'; // Ensure this line is correct
 import 'react-toastify/dist/ReactToastify.css'; // Ensure this line is correct
+import { sendOrderConfirmation } from '@/app/util/sendOrderConfirmation';
 
 // Your component code follows...
 
@@ -248,64 +249,124 @@ const handleInputChange = (e) => {
 };
 
 
-  const handlePlaceOrder = async (e) => {
-    e.preventDefault();
+const handlePlaceOrder = async (e) => {
+  e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+  // Validate form before proceeding
+  if (!validateForm()) {
+    return;
+  }
+
+  let userId = null;
+  let token = null;
+
+  try {
+    token = sessionStorage.getItem('authToken');
+    if (token) {
+      const decoded = jwtDecode(token);
+      if (decoded.exp > Date.now() / 1000) {
+        userId = decoded.id; // Get the user ID from the token
+      } else {
+        sessionStorage.removeItem('authToken');
+        router.push('/customer/pages/login'); // Redirect to login if token is expired
+        return;
+      }
     }
 
-    let userId = null;
+    // Prepare order items
+    const orderItems = cart.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+      selectedColor: item.selectedColor,
+      selectedSize: item.selectedSize,
+    }));
 
-    try {
-      const token = sessionStorage.getItem('authToken');
-      if (token) {
-        const decoded = jwtDecode(token);
-        if (decoded.exp > Date.now() / 1000) {
-          userId = decoded.id;
-        } else {
-          sessionStorage.removeItem('authToken');
-          router.push('/customer/pages/login');
-          return;
-        }
-      }
+    // Prepare order details
+    const orderDetails = {
+      userId,
+      shippingAddress,
+      paymentMethod,
+      paymentInfo: paymentMethod === 'Credit Card' ? paymentInfo : null,
+      items: orderItems,
+      total: calculateTotal(),
+      discount,
+      tax: (total - discount) * taxRate,
+      netTotal: calculateTotal(),
+      couponCode,
+    };
 
-      const orderItems = cart.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-        selectedColor: item.selectedColor,
-        selectedSize: item.selectedSize,
-      }));
+    // Place the order with your backend
+    const response = await axios.post('/api/orders', orderDetails, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}, // Include auth token if available
+    });
 
-      const orderDetails = {
-        userId,
-        shippingAddress,
-        paymentMethod,
-        paymentInfo: paymentMethod === 'Credit Card' ? paymentInfo : null,
-        items: orderItems,
-        total: calculateTotal(),
-        discount,
-        tax: (total - discount) * taxRate,
-        netTotal: calculateTotal(),
-        couponCode,
-      };
+    if (response.data.status) {
+      setIsModalOpen(true);
+      localStorage.removeItem('cart'); // Clear the cart from localStorage
+      setCart([]); // Reset cart state
 
-      const response = await axios.post('/api/orders', orderDetails, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      // Send order confirmation email
+      await sendOrderConfirmation(
+        shippingAddress.email, // Email to send to
+        shippingAddress.recipientName, // Customer's name
+        response.data.data.id, // Order ID from backend response
+        calculateTotal(), // Total amount
+        orderItems, // Ordered items
+        shippingAddress // Shipping address details
+      );
 
-      if (response.data.status) {
-        setIsModalOpen(true);
-        localStorage.removeItem('cart');
-        setCart([]);
-      } else {
-        toast.error('Failed to place order. Please try again.');
-      }
-    } catch (error) {
+      toast.success('Order placed successfully!');
+    } else {
       toast.error('Failed to place order. Please try again.');
     }
-  };
+  } catch (error) {
+    console.error('Error placing order:', error);
+    toast.error('Failed to place order. Please try again.');
+  }
+};
+
+// Function to send order confirmation email
+const sendOrderConfirmation = async (email, name, orderId, total, items, address) => {
+  try {
+    const response = await axios.post('/api/sendOrderConfirmation', {
+      email,
+      name,
+      orderId,
+      total,
+      items,
+      address,
+    });
+    toast.success('Order confirmation email sent successfully!');
+  } catch (error) {
+    console.error('Failed to send order confirmation email:', error);
+    toast.error('Failed to send order confirmation email.');
+  }
+};
+
+
+
+// const sendOrderConfirmation = async (email, name, orderId, total, items, address) => {
+//   try {
+//     const response = await axios.post('/api/orders', {
+//       email,
+//       name,
+//       orderId,
+//       total,
+//       items,
+//       address,
+//     });
+//     toast.success('Order confirmation email sent successfully!');
+//   } catch (error) {
+//     console.error('Failed to send order confirmation email:', error);
+//     if (error.response && error.response.data) {
+//       console.error('Error details:', error.response.data);
+//     }
+//     toast.error('Failed to send order confirmation email.');
+//   }
+// };
+
+
 
   const handleApplyCoupon = async () => {
     try {

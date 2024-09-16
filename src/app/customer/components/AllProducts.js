@@ -147,7 +147,7 @@ const TopRatedProducts = () => {
       </div>
 
       {visibleProducts < products.length && (
-        <div className="text-center mt-6">
+        <div className="text-center mt-4 bottom-0">
           <button
             className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
             onClick={showMoreProducts}

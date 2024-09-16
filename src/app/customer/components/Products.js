@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -65,7 +66,7 @@ const Products = () => {
       const prevIndex = Math.max(prevIndices[categoryId] - 1, 0);
       return { ...prevIndices, [categoryId]: prevIndex };
     });
-    
+
   };
   const formatPrice = (price) => {
     return price.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -116,28 +117,30 @@ const Products = () => {
 
           return (
             <div key={category.id} className="mb-4 ">
-              <h3 className="text-xl text-gray-800 font-bold mb-10 text-center md:text-left">
+              <h3 className="text-xl text-gray-800 font-bold mb-2 text-center md:text-left">
                 {category.name}
               </h3>
 
               {/* Grid Layout */}
               <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 items-start">
-                <div className="category-image">
-                  {category.imageUrl ? (
-                    <img
-                      src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
-                      alt={category.name}
-                      className="w-full h-[200px] md:h-[300px] rounded-lg shadow-md object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
-                      No Image
-                    </div>
-                  )}
-                  <p className="text-gray-500 mt-2 text-center md:text-left">
-                    {category.description}
-                  </p>
-                </div>
+              <div className="category-image">
+  <Link href={`/customer/pages/category/${category.id}`}>
+    {category.imageUrl ? (
+      <img
+        src={`https://data.tascpa.ca/uploads/${category.imageUrl}`}
+        alt={category.name}
+        className="w-full h-[220px] md:h-[320px] shadow-md object-cover cursor-pointer"
+      />
+    ) : (
+      <div className="w-full h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 cursor-pointer">
+        No Image
+      </div>
+    )}
+  </Link>
+  <p className="text-gray-500 mt-2 text-center md:text-left">
+    {category.description}
+  </p>
+</div>
 
                 <div className="relative">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-4">
@@ -149,7 +152,7 @@ const Products = () => {
                       return (
                         <div
                           key={product.id}
-                          className="bg-white shadow-md rounded-lg cursor-pointer border border-gray-300 relative h-[320px] flex-shrink-0"
+                          className="bg-white shadow-md  cursor-pointer border border-gray-300 relative h-[320px] flex-shrink-0"
                         >
                           {product.discount && (
                             <div className="absolute z-40 top-0 left-0 bg-red-100 text-red-600 font-normal text-sm px-1 py-0.5">

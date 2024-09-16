@@ -91,8 +91,9 @@ export default function WhatsAppButton() {
                     </div>
                   )}
                   <div className="flex-grow">
-                    <h3 className="text-md ">{item.name}</h3>
-                    <p className="text-md font-medium text-gray-700">Rs.{item.price}</p>
+                  <h3 className="text-md ">{item.name.toUpperCase()}</h3>
+
+                    <p className="text-md font-medium text-gray-700">Rs.{item.price.toLocaleString()}</p>
                     <div className="flex items-center">
                       <button
                         className="bg-gray-300 text-gray-700 px-2 rounded-md"

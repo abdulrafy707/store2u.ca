@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiShoppingCart, FiMenu, FiX, FiLogOut } from 'react-icons/fi';
+import { FiSearch,FiUser, FiShoppingCart, FiMenu, FiX, FiLogOut } from 'react-icons/fi';
 import { MdExpandMore } from 'react-icons/md';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,7 +19,10 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [authToken, setAuthToken] = useState(null);
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false); // For sign-out confirmation modal
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const router = useRouter();
+
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
   const dropdownRef = useRef(null); // Ref for mega dropdown
@@ -74,6 +77,18 @@ const Header = () => {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+  const getRandomColor = () => {
+    const colors = ['#F59E0B', '#3B82F6', '#10B981', '#EF4444', '#6366F1']; // Add more colors if needed
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
+  const getUserInitial = () => {
+    // Replace with logic to get the user's name, e.g. from JWT or session storage
+    const user = sessionStorage.getItem('user') || '';
+    return user.charAt(0).toUpperCase(); // Return first letter capitalized
+  };
+  
+  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -285,21 +300,39 @@ const Header = () => {
             </a>
           </div>
           {authToken ? (
-            <div className="hidden lg:flex items-center space-x-4 lg:space-x-6">
-              <Link href="/customer/pages/orders" className="text-gray-700 text-[14px] hover:text-blue-500 transition-colors duration-300">My Orders</Link>
-              <button
-                onClick={handleSignOut}
-                className="text-gray-700 hover:text-blue-500 text-[14px] transition-colors duration-300 flex items-center"
-              >
-                <FiLogOut className="mr-2" />
-                {/* Sign out */}
-              </button>
-            </div>
-          ) : (
-            <div className="hidden lg:flex items-center">
-              <Link href="/customer/pages/login" className="text-gray-700 text-sm mr-2 hover:text-blue-500 transition-colors duration-300">Sign in</Link>
-            </div>
-          )}
+  <div className="relative" ref={dropdownRef}>
+    {/* Profile icon for logged-in users */}
+    <FiUser
+      className="w-6 h-6 text-gray-700 cursor-pointer hover:text-blue-500 transition-colors"
+      onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle the dropdown on click
+    />
+
+    {/* Dropdown for profile options */}
+    {isDropdownOpen && (
+      <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg p-2 z-50">
+        <Link href="/customer/pages/orders" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+          My Orders
+        </Link>
+        <Link href="/customer/pages/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+          Profile
+        </Link>
+        <button
+          onClick={handleSignOut}
+          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+        >
+          Sign Out
+        </button>
+      </div>
+    )}
+  </div>
+) : (
+  <div className="hidden lg:flex items-center">
+    <Link href="/customer/pages/login" className="text-gray-700 text-sm mr-2 hover:text-blue-500 transition-colors duration-300">
+      Sign in
+    </Link>
+  </div>
+)}
+
         </div>
       </div>
 
