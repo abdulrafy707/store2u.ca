@@ -128,6 +128,10 @@ const ProductPage = () => {
   const handleThumbnailClick = (index) => {
     setCurrentImageIndex(index);
   };
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  };
+  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -185,16 +189,23 @@ const ProductPage = () => {
 
         {/* Product Info and Add to Cart */}
         <div className="w-full lg:w-2/5 h-full flex flex-col">
-          <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
+          <h2 className="text-2xl font-bold mb-4">{product.name.toUpperCase()}</h2>
           <div className="flex items-center mb-4">
-            {product.discount ? (
-              <>
-                <span className="text-green-500 text-xl line-through mr-4">Rs.{product.price}</span>
-                <span className="text-red-500 font-bold text-xl">Rs.{calculateOriginalPrice(product.price, product.discount)}</span>
-              </>
-            ) : (
-              <span className="text-red-500 text-2xl">Rs.{product.price}</span>
-            )}
+          {product.discount ? (
+  <>
+    <span className="text-green-500 text-xl line-through mr-4">
+      Rs.{formatPrice(product.price)}  {/* Format original price */}
+    </span>
+    <span className="text-red-500 font-bold text-xl">
+      Rs.{formatPrice(calculateOriginalPrice(product.price, product.discount))}  {/* Format discounted price */}
+    </span>
+  </>
+) : (
+  <span className="text-red-500 text-2xl">
+    Rs.{formatPrice(product.price)}  {/* Format non-discounted price */}
+  </span>
+)}
+
           </div>
 
           {/* Stock Info */}
@@ -324,21 +335,20 @@ const ProductPage = () => {
          
           <div className="grid grid-cols-2 px-2">
           <div className="flex items-center">
-                    {product.discount ? (
-                      <div className="flex items-center justify-center gap-3 flex-row-reverse">
-                        <p className="text-xs font-normal text-gray-700 line-through">
-                          Rs.{product.price}
-                        </p>
-                        <p className="text-sm font-bold text-red-700">
-                          Rs.{originalPrice}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-sm font-bold text-gray-700">
-                        {/* Bold the price */}
-                        Rs.{product.price}
-                      </p>
-                    )}
+          {product.discount ? (
+  <div className="flex items-center justify-center gap-3 flex-row-reverse">
+    <p className="text-xs font-normal text-gray-700 line-through">
+      Rs.{formatPrice(product.price)}  {/* Format original price */}
+    </p>
+    <p className="text-sm font-bold text-red-700">
+      Rs.{formatPrice(originalPrice)}  {/* Format discounted price */}
+    </p>
+  </div>
+) : (
+  <p className="text-sm font-bold text-gray-700">
+    Rs.{formatPrice(product.price)}  {/* Format non-discounted price */}
+  </p>
+)}
                   </div>
           </div>
           <h3

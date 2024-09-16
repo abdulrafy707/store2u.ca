@@ -37,6 +37,10 @@ const DiscountedProducts = () => {
     alert(`${product.name} has been added to the cart.`);
   };
 
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  };
+
   const calculateOriginalPrice = (price, discount) => {
     if (typeof price === 'number' && typeof discount === 'number') {
       return price - (price * (discount / 100));
@@ -106,21 +110,20 @@ const DiscountedProducts = () => {
                 
                 <div className="grid grid-cols-2 py-2">
                 <div className="flex items-center">
-                    {product.discount ? (
-                      <div className="flex items-center justify-center gap-3 flex-row-reverse">
-                        <p className="text-xs font-normal text-gray-700 line-through">
-                          Rs.{product.price}
-                        </p>
-                        <p className="text-sm font-bold text-red-700">
-                          Rs.{originalPrice}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-sm font-bold text-gray-700">
-                        {/* Bold the price */}
-                        Rs.{product.price}
-                      </p>
-                    )}
+                {product.discount ? (
+  <div className="flex items-center justify-center gap-3 flex-row-reverse">
+    <p className="text-xs font-normal text-gray-700 line-through">
+      Rs.{formatPrice(product.price)}  {/* Format original price */}
+    </p>
+    <p className="text-sm font-bold text-red-700">
+      Rs.{formatPrice(originalPrice)}  {/* Format discounted price */}
+    </p>
+  </div>
+) : (
+  <p className="text-sm font-bold text-gray-700">
+    Rs.{formatPrice(product.price)}  {/* Format non-discounted price */}
+  </p>
+)}
                   </div>
                 </div>
                 <h3

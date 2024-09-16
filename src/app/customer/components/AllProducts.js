@@ -40,6 +40,9 @@ const TopRatedProducts = () => {
   const showMoreProducts = () => {
     setVisibleProducts((prevVisibleProducts) => prevVisibleProducts + 12); // Load 12 more products
   };
+  const formatPrice = (price) => {
+    return price.toLocaleString('en-PK', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  };
 
   const calculateOriginalPrice = (price, discount) => {
     if (typeof price === 'number' && typeof discount === 'number') {
@@ -109,20 +112,20 @@ const TopRatedProducts = () => {
               <div className="px-2">
                 <div className="grid grid-cols-2 py-2">
                   <div className="flex items-center">
-                    {product.discount ? (
-                      <div className="flex items-center justify-center gap-3 flex-row-reverse">
-                        <p className="text-xs font-normal text-gray-700 line-through">
-                          Rs.{product.price}
-                        </p>
-                        <p className="text-sm font-bold text-red-700">
-                          Rs.{originalPrice}
-                        </p>
-                      </div>
-                    ) : (
-                      <p className="text-sm font-bold text-gray-700">
-                        Rs.{product.price}
-                      </p>
-                    )}
+                  {product.discount ? (
+  <div className="flex items-center justify-center gap-3 flex-row-reverse">
+    <p className="text-xs font-normal text-gray-700 line-through">
+      Rs.{formatPrice(product.price)}  {/* Format original price */}
+    </p>
+    <p className="text-sm font-bold text-red-700">
+      Rs.{formatPrice(originalPrice)}  {/* Format discounted price */}
+    </p>
+  </div>
+) : (
+  <p className="text-sm font-bold text-gray-700">
+    Rs.{formatPrice(product.price)}  {/* Format non-discounted price */}
+  </p>
+)}
                   </div>
                 </div>
                 <h3
@@ -146,7 +149,7 @@ const TopRatedProducts = () => {
       {visibleProducts < products.length && (
         <div className="text-center mt-6">
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+            className="border border-gray-500 text-gray-700 bg-transparent py-2 px-4 rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors"
             onClick={showMoreProducts}
           >
             Show More
