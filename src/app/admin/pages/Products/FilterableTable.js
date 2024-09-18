@@ -428,7 +428,8 @@ const FilterableTable = ({
 
       {editProduct && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 w-[700px] max-h-[90vh] overflow-auto rounded shadow-lg">
+          <div className="bg-white p-4 w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl max-h-[90vh] overflow-auto rounded shadow-lg">
+
             <h2 className="text-xl mb-4">Edit Product</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">

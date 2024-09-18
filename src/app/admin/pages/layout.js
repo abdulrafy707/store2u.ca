@@ -13,7 +13,7 @@ const AdminLayout = ({ children, setActiveComponent }) => {
       </div>
 
       {/* Main content area */}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col w-[800px] flex-grow">
         <Header />
         <main className="flex-grow p-4">
           {children}
