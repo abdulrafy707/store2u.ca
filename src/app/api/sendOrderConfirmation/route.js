@@ -30,7 +30,7 @@ export async function POST(request) {
     }
 
     // Fetch delivery and extra delivery charges from settings
-    const settingsResponse = await fetch(`http://localhost:3000/api/settings/getSettings`);
+    const settingsResponse = await fetch(`http://store2u.ca/api/settings/getSettings`);
     const settings = await settingsResponse.json();
 
     const deliveryCharge = settings.deliveryCharge || 0;
