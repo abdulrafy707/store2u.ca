@@ -1,14 +1,20 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { FiSearch,FiUser, FiShoppingCart, FiMenu, FiX, FiLogOut } from 'react-icons/fi';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  FiSearch,
+  FiUser,
+  FiShoppingCart,
+  FiMenu,
+  FiX,
+  FiLogOut,
+} from 'react-icons/fi';
 import { MdExpandMore } from 'react-icons/md';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCart } from '@/app/store/cartSlice';
 import { FaSearch } from 'react-icons/fa';
-import { useRef } from 'react';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
@@ -25,7 +31,11 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
-  const dropdownRef = useRef(null); // Ref for mega dropdown
+  
+  // Refs for dropdowns
+  const megaDropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const profileButtonRef = useRef(null);
 
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
@@ -33,7 +43,7 @@ const Header = () => {
         const categoryResponse = await fetch('/api/categories');
         const categoriesData = await categoryResponse.json();
         setCategories(categoriesData);
-  
+
         const subcategoryResponse = await fetch('/api/subcategories');
         const subcategoriesData = await subcategoryResponse.json();
         setSubcategories(subcategoriesData);
@@ -43,59 +53,73 @@ const Header = () => {
         setSubcategories([]);
       }
     };
-  
+
     const token = sessionStorage.getItem('authToken');
     if (token) {
       setAuthToken(token);
     }
-  
+
     fetchCategoriesAndSubcategories();
-  
+
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     dispatch(setCart(storedCart));
-  
-    // Handle clicking outside the mega dropdown
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+
+    // Event listener for clicks outside the mega dropdown
+    const handleClickOutsideMega = (event) => {
+      if (
+        megaDropdownRef.current &&
+        !megaDropdownRef.current.contains(event.target) &&
+        !event.target.closest('#department-button') // Ensure the department button is not clicked
+      ) {
         setIsMegaDropdownOpen(false);
       }
     };
-  
-    // Add event listener for clicks outside the dropdown
-    if (isMegaDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-  
-    // Cleanup the event listener when component unmounts or dropdown closes
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+
+    // Event listener for clicks outside the profile dropdown
+    const handleClickOutsideProfile = (event) => {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target) &&
+        !profileButtonRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
     };
-  }, [dispatch, isMegaDropdownOpen]); // Add isMegaDropdownOpen as a dependency
-  
+
+    // Add event listeners
+    document.addEventListener('mousedown', handleClickOutsideMega);
+    document.addEventListener('mousedown', handleClickOutsideProfile);
+
+    // Cleanup event listeners on unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideMega);
+      document.removeEventListener('mousedown', handleClickOutsideProfile);
+    };
+  }, [dispatch]);
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
   const getRandomColor = () => {
     const colors = ['#F59E0B', '#3B82F6', '#10B981', '#EF4444', '#6366F1']; // Add more colors if needed
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
   const getUserInitial = () => {
-    // Replace with logic to get the user's name, e.g. from JWT or session storage
+    // Replace with logic to get the user's name, e.g., from JWT or session storage
     const user = sessionStorage.getItem('user') || '';
     return user.charAt(0).toUpperCase(); // Return first letter capitalized
   };
-  
-  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) {
       router.push('/'); // Redirect to the home page if the search query is empty
     } else {
-      const searchPageUrl = `/customer/pages/allproducts?search=${encodeURIComponent(searchQuery.trim())}`;
+      const searchPageUrl = `/customer/pages/allproducts?search=${encodeURIComponent(
+        searchQuery.trim()
+      )}`;
       router.push(searchPageUrl);
     }
   };
@@ -141,23 +165,27 @@ const Header = () => {
   };
 
   const handleCategoryClick = (categoryId) => {
-  
     router.push(`/customer/pages/category/${categoryId}`);
+    setIsMegaDropdownOpen(false); // Close the mega dropdown after navigation
   };
 
   const handleCategoryLeave = () => {
     setHoveredCategory(null);
-    // Reset subcategories to show all when no category is hovered
-    fetchSubcategories(); // This will fetch and show all subcategories again
+    // Optionally close the mega dropdown when the mouse leaves
+    // setIsMegaDropdownOpen(false);
   };
-  
 
   return (
     <header className="bg-white py-4 sticky top-0 z-50 shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
         <div className="flex items-center space-x-6 lg:space-x-8">
           <Link href="/">
-            <img src="/store2ulogo.png" alt="Logo" className="h-10 w-auto cursor-pointer" />
+            <img
+              src="/store2ulogo.png"
+              alt="Logo"
+              className="h-10 w-auto cursor-pointer"
+            />
           </Link>
         </div>
 
@@ -173,10 +201,11 @@ const Header = () => {
 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex lg:items-center lg:justify-between lg:space-x-8">
-          <div className="flex flex-col  text-black lg:flex-row text-xs lg:text-[16px] text-center lg:space-x-6">
+          <div className="flex flex-col text-black lg:flex-row text-xs lg:text-[16px] text-center lg:space-x-6">
             {/* Department Button */}
             <div className="relative">
               <button
+                id="department-button" // Assign an ID to reference in event listeners
                 onClick={toggleMegaDropdown}
                 className="text-gray-700 hover:text-blue-500 transition-colors duration-300 py-2 lg:py-0 flex items-center"
               >
@@ -184,9 +213,9 @@ const Header = () => {
               </button>
               {isMegaDropdownOpen && (
                 <div
-                  ref={dropdownRef}
-                  className=" absolute left-0 top-full mt-7 w-[500px] bg-white shadow-lg z-50 grid grid-cols-2"
-                  onMouseLeave={handleCategoryLeave} // Close dropdown when mouse leaves
+                  ref={megaDropdownRef}
+                  className="absolute left-0 top-full mt-2 w-[500px] bg-white shadow-lg z-50 grid grid-cols-2"
+                  onMouseLeave={handleCategoryLeave} // Optional: Close dropdown when mouse leaves
                 >
                   {/* First Column: Categories */}
                   <div className="p-4 bg-white">
@@ -212,54 +241,62 @@ const Header = () => {
                   </div>
 
                   {/* Second Column: Subcategories */}
-                  <div className="p-4 border-l h-[400px]  bg-white">
-  {hoveredCategory ? (
-    // If a category is hovered, filter subcategories for that category
-    subcategories
-      .filter((subcategory) => subcategory.categoryId === hoveredCategory.id)
-      .map((subcategory) => (
-        <div
-          key={subcategory.id}
-          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
-        >
-          {/* Subcategory Image */}
-          {subcategory.imageUrl && (
-            <img
-              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
-              alt={subcategory.name}
-              className="w-8 h-8 object-cover rounded-full"
-            />
-          )}
-          {/* Subcategory Name */}
-          <Link href={`/customer/pages/subcategories/${subcategory.id}`}>
-            <span>{subcategory.name}</span>
-          </Link>
-        </div>
-      ))
-  ) : (
-    // If no category is hovered, show all subcategories by default
-    subcategories.map((subcategory) => (
-      <div
-        key={subcategory.id}
-        className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
-      >
-        {/* Subcategory Image */}
-        {subcategory.imageUrl && (
-          <img
-            src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
-            alt={subcategory.name}
-            className="w-8 h-8 object-cover rounded-full"
-          />
-        )}
-        {/* Subcategory Name */}
-        <Link href={`/customer/pages/subcategories/${subcategory.id}`}>
-          <span>{subcategory.name}</span>
-        </Link>
-      </div>
-    ))
-  )}
-</div>
-
+                  <div className="p-4 border-l h-[400px] bg-white overflow-y-auto">
+                    {hoveredCategory ? (
+                      // If a category is hovered, filter subcategories for that category
+                      subcategories
+                        .filter(
+                          (subcategory) =>
+                            subcategory.categoryId === hoveredCategory.id
+                        )
+                        .map((subcategory) => (
+                          <div
+                            key={subcategory.id}
+                            className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+                            onClick={() =>
+                              router.push(
+                                `/customer/pages/subcategories/${subcategory.id}`
+                              )
+                            }
+                          >
+                            {/* Subcategory Image */}
+                            {subcategory.imageUrl && (
+                              <img
+                                src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
+                                alt={subcategory.name}
+                                className="w-8 h-8 object-cover rounded-full"
+                              />
+                            )}
+                            {/* Subcategory Name */}
+                            <span>{subcategory.name}</span>
+                          </div>
+                        ))
+                    ) : (
+                      // If no category is hovered, show all subcategories by default
+                      subcategories.map((subcategory) => (
+                        <div
+                          key={subcategory.id}
+                          className="text-gray-700 hover:text-blue-500 py-2 block flex items-center space-x-2 cursor-pointer"
+                          onClick={() =>
+                            router.push(
+                              `/customer/pages/subcategories/${subcategory.id}`
+                            )
+                          }
+                        >
+                          {/* Subcategory Image */}
+                          {subcategory.imageUrl && (
+                            <img
+                              src={`https://data.tascpa.ca/uploads/${subcategory.imageUrl}`}
+                              alt={subcategory.name}
+                              className="w-8 h-8 object-cover rounded-full"
+                            />
+                          )}
+                          {/* Subcategory Name */}
+                          <span>{subcategory.name}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -278,7 +315,9 @@ const Header = () => {
           </div>
         </nav>
 
+        {/* Search, Cart, and Profile */}
         <div className="hidden lg:flex items-center space-x-4 lg:space-x-6 mt-4 lg:mt-0">
+          {/* Search Form */}
           <form className="relative flex" onSubmit={handleSearchSubmit}>
             <input
               type="text"
@@ -287,52 +326,74 @@ const Header = () => {
               placeholder="Search Items"
               className="border rounded-full py-1 px-3 text-[14px] w-48 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button type="submit" className="absolute right-2 top-2 text-gray-700 hover:text-blue-500">
+            <button
+              type="submit"
+              className="absolute right-2 top-2 text-gray-700 hover:text-blue-500"
+            >
               <FaSearch />
             </button>
           </form>
+
+          {/* Shopping Cart */}
           <div className="relative flex">
-            <a href="/customer/pages/cart">
+            <Link href="/customer/pages/cart">
               <FiShoppingCart className="text-gray-700 cursor-pointer hover:text-blue-500 transition-colors duration-300" />
               {cartItems.length > 0 && (
-                <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1 text-[10px] font-bold">{cartItems.length}</span>
+                <span className="absolute top-[-12px] right-[-12px] bg-red-500 text-white rounded-full px-1 text-[10px] font-bold">
+                  {cartItems.length}
+                </span>
               )}
-            </a>
+            </Link>
           </div>
+
+          {/* Profile Icon */}
           {authToken ? (
-  <div className="relative" ref={dropdownRef}>
-    {/* Profile icon for logged-in users */}
-    <FiUser
-      className="w-6 h-6 text-gray-700 cursor-pointer hover:text-blue-500 transition-colors"
-      onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle the dropdown on click
-    />
+            <div className="relative">
+              {/* Profile Button */}
+              <div ref={profileButtonRef}>
+                <FiUser
+                  className="w-6 h-6 text-gray-700 cursor-pointer hover:text-blue-500 transition-colors"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle the dropdown on click
+                />
+              </div>
 
-    {/* Dropdown for profile options */}
-    {isDropdownOpen && (
-      <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg p-2 z-50">
-        <Link href="/customer/pages/orders" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-          My Orders
-        </Link>
-        <Link href="/customer/pages/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-          Profile
-        </Link>
-        <button
-          onClick={handleSignOut}
-          className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-        >
-          Sign Out
-        </button>
-      </div>
-    )}
-  </div>
-) : (
-  <div className="hidden lg:flex items-center">
-    <Link href="/customer/pages/login" className="text-gray-700 text-sm mr-2 hover:text-blue-500 transition-colors duration-300">
-      Sign in
-    </Link>
-  </div>
-)}
-
+              {/* Dropdown for profile options */}
+              {isDropdownOpen && (
+                <div
+                  ref={profileDropdownRef}
+                  className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg p-2 z-50"
+                >
+                  <Link
+                    href="/customer/pages/orders"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    href="/customer/pages/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center">
+              <Link
+                href="/customer/pages/login"
+                className="text-gray-700 text-sm mr-2 hover:text-blue-500 transition-colors duration-300"
+              >
+                Sign in
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -349,7 +410,10 @@ const Header = () => {
                 placeholder="Search Items"
                 className="border rounded-full py-1 px-3 text-[14px] w-full text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <button type="submit" className="absolute right-2 top-2 text-gray-700 hover:text-blue-500">
+              <button
+                type="submit"
+                className="absolute right-2 top-2 text-gray-700 hover:text-blue-500"
+              >
                 <FaSearch />
               </button>
             </form>
