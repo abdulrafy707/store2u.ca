@@ -248,6 +248,22 @@ const handleInputChange = (e) => {
   }));
 };
 
+// Function to fetch product name by product ID
+const fetchProductNameById = async (id) => {
+  try {
+    const response = await axios.get(`/api/products/productname/${id}`);
+    if (response.data && response.data.name) {
+      return response.data.name;
+    } else {
+      return 'Unknown Product';
+    }
+  } catch (error) {
+    console.error('Error fetching product name:', error);
+    return 'Unknown Product';
+  }
+};
+
+
 
 const handlePlaceOrder = async (e) => {
   e.preventDefault();
@@ -273,14 +289,18 @@ const handlePlaceOrder = async (e) => {
       }
     }
 
-    // Prepare order items
-    const orderItems = cart.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      price: item.price,
-      selectedColor: item.selectedColor,
-      selectedSize: item.selectedSize,
+    // Prepare order items (fetch product name for each item)
+    const orderItems = await Promise.all(cart.map(async (item) => {
+      const productName = await fetchProductNameById(item.productId); // Fetch product name by ID
+      return {
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        product: { name: productName } // Use the fetched product name
+      };
     }));
+
+    console.log('Order Items:', orderItems); // Debug orderItems
 
     // Prepare order details
     const orderDetails = {
@@ -288,7 +308,7 @@ const handlePlaceOrder = async (e) => {
       shippingAddress,
       paymentMethod,
       paymentInfo: paymentMethod === 'Credit Card' ? paymentInfo : null,
-      items: orderItems,
+      items: orderItems, // Pass the correct items structure
       total: calculateTotal(),
       discount,
       tax: (total - discount) * taxRate,
@@ -296,10 +316,14 @@ const handlePlaceOrder = async (e) => {
       couponCode,
     };
 
+    console.log('Order Details:', orderDetails); // Debug orderDetails
+
     // Place the order with your backend
     const response = await axios.post('/api/orders', orderDetails, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}, // Include auth token if available
     });
+
+    console.log('API Response:', response.data); // Log the response
 
     if (response.data.status) {
       setIsModalOpen(true);
@@ -310,39 +334,65 @@ const handlePlaceOrder = async (e) => {
       await sendOrderConfirmation(
         shippingAddress.email, // Email to send to
         shippingAddress.recipientName, // Customer's name
-        response.data.data.id, // Order ID from backend response
+        response.data.data.id, // Use order ID from backend response
         calculateTotal(), // Total amount
         orderItems, // Ordered items
-        shippingAddress // Shipping address details
+        shippingAddress, // Shipping address details
+        deliveryCharge, // Delivery charge
+        extraDeliveryCharge // Extra delivery charge for COD
       );
 
       toast.success('Order placed successfully!');
     } else {
+      console.error('API Error:', response.data);
       toast.error('Failed to place order. Please try again.');
     }
   } catch (error) {
-    console.error('Error placing order:', error);
+    console.error('Error placing order:', error); // Log the error
     toast.error('Failed to place order. Please try again.');
   }
 };
 
+
+
+
+
 // Function to send order confirmation email
-const sendOrderConfirmation = async (email, name, orderId, total, items, address) => {
+const sendOrderConfirmation = async (email, name, orderId, total, items, address, deliveryCharge, extraDeliveryCharge) => {
   try {
+    // Ensure items is an array
+    if (!Array.isArray(items)) {
+      throw new Error('Items is not an array');
+    }
+
+    // Structure the items array to match the expected format in the backend
+    const formattedItems = items.map(item => ({
+      product: {
+        name: item.product?.name || 'Unknown Product', // Ensure the product name exists
+      },
+      quantity: item.quantity || 1,
+      price: item.price || 0,
+    }));
+
+    // Send the request to the backend API
     const response = await axios.post('/api/sendOrderConfirmation', {
       email,
       name,
       orderId,
       total,
-      items,
+      product: formattedItems, // Correctly structure the items array as "product"
       address,
+      deliveryCharge,
+      extraDeliveryCharge,
     });
+
     toast.success('Order confirmation email sent successfully!');
   } catch (error) {
     console.error('Failed to send order confirmation email:', error);
     toast.error('Failed to send order confirmation email.');
   }
 };
+
 
 
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/app/util/prisma';
+import nodemailer from 'nodemailer';
 
 export async function GET(request, { params }) {
   const { id } = params;
@@ -76,10 +77,52 @@ export async function PUT(request) {
       });
     });
 
+    // Send email on status change
+    if (updatedOrder) {
+      await sendStatusUpdateEmail({
+        email: updatedOrder.email,
+        name: updatedOrder.recipientName || 'Customer',
+        orderId: updatedOrder.id,
+        status: updatedOrder.status,
+      });
+    }
+
     return NextResponse.json(updatedOrder);
   } catch (error) {
     console.error('Error updating order:', error);
     return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
+  }
+}
+
+// Function to send email notification when order status is updated
+async function sendStatusUpdateEmail({ email, name, orderId, status }) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USERNAME,
+      to: email,
+      subject: `Order Status Updated - Order ID #${orderId}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+          <h2>Hello ${name},</h2>
+          <p>Your order with ID <strong>#${orderId}</strong> has been updated to <strong>${status.toUpperCase()}</strong>.</p>
+          <p>If you have any questions, feel free to reply to this email.</p>
+          <p>Thank you for shopping with us!</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Status update email sent to', email);
+  } catch (error) {
+    console.error('Error sending status update email:', error);
   }
 }
 

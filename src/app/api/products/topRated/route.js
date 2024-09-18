@@ -11,7 +11,7 @@ export async function GET(request) {
         });
         
         // Log the top-rated products to the console
-        console.log('Top Rated Products:', topRatedProducts);
+        // console.log('Top Rated Products:', topRatedProducts);
 
         return NextResponse.json({ data: topRatedProducts, status: true }, { status: 200 });
     } catch (error) {

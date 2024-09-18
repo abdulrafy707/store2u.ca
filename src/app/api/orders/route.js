@@ -55,6 +55,9 @@ export async function POST(request) {
   try {
     const { userId, shippingAddress, paymentMethod, items, total, discount = 0, tax, netTotal, couponCode = null } = await request.json();
 
+    // Ensure that paymentInfo is defined only when the payment method is 'Credit Card'
+    const paymentInfo = paymentMethod === 'Credit Card' ? await request.json().paymentInfo : null;
+
     // Validate the required fields
     if (!items || items.length === 0 || !total || !netTotal) {
       return NextResponse.json({ message: 'Invalid order data', status: false }, { status: 400 });
@@ -79,7 +82,7 @@ export async function POST(request) {
         phoneNumber: shippingAddress.phoneNumber,
         email: shippingAddress.email,
         paymentMethod,
-        paymentInfo: paymentMethod === 'Credit Card' ? JSON.stringify(paymentInfo) : null,
+        paymentInfo: paymentMethod === 'Credit Card' ? JSON.stringify(paymentInfo) : null, // Only include paymentInfo if Credit Card
         couponCode,
         orderItems: {
           create: items.map(item => ({
@@ -108,6 +111,7 @@ export async function POST(request) {
     return NextResponse.json({ message: 'Failed to place order', error: error.message, status: false }, { status: 500 });
   }
 }
+
 
 
 
