@@ -65,7 +65,7 @@ const Contact = () => {
               <p className="text-gray-600 leading-relaxed mb-4">
                 <strong>Email:</strong> <a href="mailto:support@store2u.com" className="text-blue-500 hover:underline">support@store2u.com</a><br />
                 <strong>Phone:</strong> <a href="tel:+923128807795" className="text-blue-500 hover:underline">+92 312 8807795</a><br />
-                <strong>Address:</strong> Garden Town, House No 15C street No. 12, Gojra, Toba Tek Singh
+                <strong>Address:</strong> PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,District Toba Tek Singh, Punjab, Pakistan
               </p>
             </section>
             <section>

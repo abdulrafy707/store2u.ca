@@ -155,6 +155,56 @@ const AdminOrdersPage = () => {
               </div>
             </div>
           </div>
+          <div className="mt-8">
+            <h3 className="text-lg text-center py-2 font-bold text-gray-700">Shipping Information</h3>
+            <form onSubmit={handleShippingSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="shippingMethod" className="block text-sm font-medium text-gray-700">Shipping Method</label>
+                  <input
+                    type="text"
+                    id="shippingMethod"
+                    value={shippingMethod}
+                    onChange={(e) => setShippingMethod(e.target.value)}
+                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="shippingTerms" className="block text-sm font-medium text-gray-700">Shipping Terms</label>
+                  <input
+                    type="text"
+                    id="shippingTerms"
+                    value={shippingTerms}
+                    onChange={(e) => setShippingTerms(e.target.value)}
+                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="shipmentDate" className="block text-sm font-medium text-gray-700">Shipment Date</label>
+                  <input
+                    type="date"
+                    id="shipmentDate"
+                    value={shipmentDate}
+                    onChange={(e) => setShipmentDate(e.target.value)}
+                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="deliveryDate" className="block text-sm font-medium text-gray-700">Delivery Date</label>
+                  <input
+                    type="date"
+                    id="deliveryDate"
+                    value={deliveryDate}
+                    onChange={(e) => setDeliveryDate(e.target.value)}
+                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="mt-4">
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Shipping Information</button>
+              </div>
+            </form>
+          </div>
 
           {/* Scrollable table with color circles */}
           <div className="mt-8">
