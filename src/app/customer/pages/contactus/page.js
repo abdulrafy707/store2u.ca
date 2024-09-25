@@ -63,8 +63,8 @@ const Contact = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Contact Information</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                <strong>Email:</strong> <a href="mailto:support@store2u.com" className="text-blue-500 hover:underline">support@store2u.com</a><br />
-                <strong>Phone:</strong> <a href="tel:+923128807795" className="text-blue-500 hover:underline">+92 312 8807795</a><br />
+                <strong>Email:</strong> <a href="mailto:support@store2u.com" className="text-blue-500 hover:underline">info@store2u.ca</a><br />
+                <strong>Phone:</strong> <a href="tel:+923128807795" className="text-blue-500 hover:underline">+92310356111</a><br />
                 <strong>Address:</strong> PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,District Toba Tek Singh, Punjab, Pakistan
               </p>
             </section>
