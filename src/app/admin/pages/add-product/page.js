@@ -256,6 +256,9 @@ const AddProductPageContent = () => {
         images: uploadedImages, // Array of image URLs
         discount: newProduct.discount ? roundToTwoDecimalPlaces(parseFloat(newProduct.discount)) : null,
         isTopRated: newProduct.isTopRated,
+        meta_title: newProduct.meta_title,
+        meta_description: newProduct.meta_description,
+        meta_keywords: newProduct.meta_keywords,
       };
 
       // Make POST request to add new product
