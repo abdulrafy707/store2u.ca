@@ -29,6 +29,9 @@ const AddProductPageContent = () => {
     imageUrl: '',
     discount: '',
     isTopRated: false,
+    meta_title: '',
+    meta_description: '',
+    meta_keywords: '',
   });
 
   // State for fetched data
@@ -601,6 +604,58 @@ const AddProductPageContent = () => {
             placeholder="Enter product description..."
           />
         </div>
+
+
+
+
+      {/* Meta Title */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+  <input
+    type="text"
+    value={newProduct.meta_title}
+    onChange={(e) =>
+      setNewProduct({ ...newProduct, meta_title: e.target.value })
+    }
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="Enter meta title"
+  />
+</div>
+
+{/* Meta Description */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+  <textarea
+    value={newProduct.meta_description}
+    onChange={(e) =>
+      setNewProduct({ ...newProduct, meta_description: e.target.value })
+    }
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="Enter meta description"
+  />
+</div>
+
+{/* Meta Keywords */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">Meta Keywords</label>
+  <input
+    type="text"
+    value={newProduct.meta_keywords}
+    onChange={(e) =>
+      setNewProduct({ ...newProduct, meta_keywords: e.target.value })
+    }
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="Enter meta keywords"
+  />
+</div>
+
+
+
+
+
+
+
+
 
         {/* Section 3: Upload Images */}
         <div className="mb-6">

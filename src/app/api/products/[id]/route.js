@@ -14,7 +14,10 @@ export async function PUT(request, { params }) {
       sizes,
       images,
       discount,
-      isTopRated = false
+      isTopRated = false,
+      meta_title,          // New field for meta title
+      meta_description,    // New field for meta description
+      meta_keywords        // New field for meta keywords
     } = await request.json();
 
     // Ensure stock is a valid integer
@@ -37,6 +40,9 @@ export async function PUT(request, { params }) {
         discount: roundedDiscount, // Save the rounded discount value
         isTopRated,
         updatedAt: new Date(),
+        meta_title,            // Save meta_title
+        meta_description,      // Save meta_description
+        meta_keywords          // Save meta_keywords
       },
     });
 

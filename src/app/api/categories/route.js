@@ -27,11 +27,14 @@ export async function GET() {
 // Create a new category
 export async function POST(request) {
   try {
-    const { name, imageUrl } = await request.json();
+    const { name, imageUrl, meta_title, meta_description, meta_keywords } = await request.json();
     const newCategory = await prisma.category.create({
       data: {
         name,
         imageUrl,
+        meta_title,           // Store meta title
+        meta_description,     // Store meta description
+        meta_keywords,        // Store meta keywords
       },
     });
     return NextResponse.json(newCategory);

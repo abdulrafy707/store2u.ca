@@ -4,13 +4,16 @@ import prisma from '../../util/prisma';
 export async function POST(request) {
   try {
     const data = await request.json();
-    const { name, categoryId, imageUrl } = data;
+    const { name, categoryId, imageUrl, meta_title, meta_description, meta_keywords } = data;
 
     const newSubcategory = await prisma.subcategory.create({
       data: {
         name,
         categoryId: parseInt(categoryId, 10),
         imageUrl,
+        meta_title, // Save meta title
+        meta_description, // Save meta description
+        meta_keywords, // Save meta keywords
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -150,7 +153,7 @@ export async function PUT(request, { params }) {
   try {
     const id = parseInt(params.id, 10);
     const data = await request.json();
-    const { name, categoryId, imageUrl } = data;
+    const { name, categoryId, imageUrl, meta_title, meta_description, meta_keywords } = data;
 
     const updatedSubcategory = await prisma.subcategory.update({
       where: { id },
@@ -158,6 +161,9 @@ export async function PUT(request, { params }) {
         name,
         categoryId: parseInt(categoryId, 10),
         imageUrl,
+        meta_title, // Update meta title
+        meta_description, // Update meta description
+        meta_keywords, // Update meta keywords
         updatedAt: new Date(),
       },
     });

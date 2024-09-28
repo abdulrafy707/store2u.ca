@@ -6,7 +6,7 @@ import prisma from '../../../util/prisma';
 export async function GET(request, { params }) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = params.id ? parseInt(params.id, 10) : parseInt(searchParams.get('categoryId'), 10);
+    const id = params?.id ? parseInt(params.id, 10) : parseInt(searchParams.get('categoryId'), 10);
 
     if (!id) {
       return NextResponse.json(
@@ -15,33 +15,23 @@ export async function GET(request, { params }) {
       );
     }
 
-    let categories;
+    // Fetch the specific category by its ID, including its subcategories
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        subcategories: true,
+      },
+    });
 
-    if (id) {
-      // Fetch the specific category by its ID, including its subcategories
-      categories = await prisma.category.findUnique({
-        where: { id },
-        include: {
-          subcategories: true,
-        },
-      });
-
-      if (!categories) {
-        return NextResponse.json(
-          { message: 'Category not found', status: false },
-          { status: 404 }
-        );
-      }
-    } else {
-      // Fetch all categories with their subcategories if no ID is provided
-      categories = await prisma.category.findMany({
-        include: {
-          subcategories: true,
-        },
-      });
+    if (!category) {
+      return NextResponse.json(
+        { message: 'Category not found', status: false },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(categories);
+    // Return the category data
+    return NextResponse.json({ status: true, data: category });
   } catch (error) {
     console.error('Error fetching category:', error);
     return NextResponse.json(
@@ -52,18 +42,25 @@ export async function GET(request, { params }) {
 }
 
 
+
 // Update an existing category
+// Update an existing category, including meta fields
 export async function PUT(request, { params }) {
   try {
     const id = parseInt(params.id, 10);
-    const { name, imageUrl } = await request.json();
+    const { name, imageUrl, meta_title, meta_description, meta_keywords } = await request.json();
+
     const updatedCategory = await prisma.category.update({
       where: { id },
       data: {
         name,
         imageUrl,
+        meta_title,          // Update meta title
+        meta_description,    // Update meta description
+        meta_keywords,       // Update meta keywords
       },
     });
+
     return NextResponse.json(updatedCategory);
   } catch (error) {
     console.error('Error updating category:', error);
@@ -77,6 +74,7 @@ export async function PUT(request, { params }) {
     );
   }
 }
+
 
 // Delete a category
 export async function DELETE(request, { params }) {

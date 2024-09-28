@@ -14,7 +14,10 @@ export async function POST(request) {
       sizes,
       images,
       discount,
-      isTopRated
+      isTopRated,
+      meta_title,           // New field
+      meta_description,     // New field
+      meta_keywords         // New field
     } = data;
 
     if (!images || images.length === 0) {
@@ -38,6 +41,9 @@ export async function POST(request) {
         images: {
           create: images.map((url) => ({ url })),
         },
+        meta_title,
+        meta_description,
+        meta_keywords
       },
       include: {
         images: true,

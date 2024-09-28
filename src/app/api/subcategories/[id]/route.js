@@ -9,22 +9,24 @@ export async function GET(request, { params }) {
   try {
     const id = parseInt(params.id, 10);
     
-    // Fetch subcategories under the given category ID
+    // Fetch subcategories for the given category ID
     const subcategories = await prisma.subcategory.findMany({
       where: { categoryId: id },
       include: {
-        category: true,
+        category: true,  // Including the category details
       },
     });
 
-    if (subcategories.length === 0) {
+    // If no subcategories are found
+    if (!subcategories || subcategories.length === 0) {
       return NextResponse.json(
         { message: `No subcategories found for category ID ${id}`, status: false },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(subcategories);
+    // Successfully return the subcategories
+    return NextResponse.json({ status: true, data: subcategories });
   } catch (error) {
     console.error(`Error fetching subcategories for category ID ${id}:`, error);
     return NextResponse.json(
@@ -35,11 +37,12 @@ export async function GET(request, { params }) {
 }
 
 
+
 export async function PUT(request, { params }) {
   try {
     const id = parseInt(params.id, 10);
     const data = await request.json();
-    const { name, categoryId, imageUrl } = data;
+    const { name, categoryId, imageUrl, meta_title, meta_description, meta_keywords } = data;
 
     const updatedSubcategory = await prisma.subcategory.update({
       where: { id },
@@ -47,6 +50,9 @@ export async function PUT(request, { params }) {
         name,
         categoryId: parseInt(categoryId, 10),
         imageUrl,
+        meta_title, // Update meta title
+        meta_description, // Update meta description
+        meta_keywords, // Update meta keywords
         updatedAt: new Date(),
       },
     });

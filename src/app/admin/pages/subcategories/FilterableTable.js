@@ -12,6 +12,9 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
     name: '',
     categoryId: '',
     imageUrl: '',
+    meta_title: '',           // Add meta title field
+    meta_description: '',     // Add meta description field
+    meta_keywords: '',        // Add meta keywords field
   });
   const [image, setImage] = useState(null);
 
@@ -80,7 +83,15 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
       if (response.ok) {
         fetchSubcategories(); // Refresh the data after adding or updating
         setIsModalOpen(false);
-        setNewSubcategory({ id: null, name: '', categoryId: '', imageUrl: '' });
+        setNewSubcategory({
+          id: null,
+          name: '',
+          categoryId: '',
+          imageUrl: '',
+          meta_title: '',          // Reset meta title
+          meta_description: '',    // Reset meta description
+          meta_keywords: '',       // Reset meta keywords
+        });
         setImage(null);
       } else {
         console.error('Failed to add/update subcategory:', result.message);
@@ -112,6 +123,9 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
       ...item,
       image: null, // Reset image for edit
       imageUrl: item.imageUrl, // Existing image URL
+      meta_title: item.meta_title || '',        // Set existing meta title
+      meta_description: item.meta_description || '', // Set existing meta description
+      meta_keywords: item.meta_keywords || '',  // Set existing meta keywords
     });
     setIsModalOpen(true);
   };
@@ -150,6 +164,9 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
                   name: '',
                   categoryId: '',
                   imageUrl: '',
+                  meta_title: '',          // Reset meta title
+                  meta_description: '',    // Reset meta description
+                  meta_keywords: '',       // Reset meta keywords
                 });
                 setIsModalOpen(true);
               }}
@@ -221,7 +238,7 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed pt-10 inset-0 h-[99vh] overflow-y-auto flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 w-[700px] rounded shadow-lg">
             <h2 className="text-xl mb-4">{newSubcategory.id ? 'Edit Subcategory' : 'Add New Subcategory'}</h2>
             <div className="mb-4">
@@ -262,6 +279,37 @@ const FilterableTable = ({ subcategories = [], fetchSubcategories, categories = 
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
               />
             </div>
+
+            {/* Meta fields for subcategories */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+              <input
+                type="text"
+                value={newSubcategory.meta_title}
+                onChange={(e) => setNewSubcategory({ ...newSubcategory, meta_title: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+              <textarea
+                value={newSubcategory.meta_description}
+                onChange={(e) => setNewSubcategory({ ...newSubcategory, meta_description: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Keywords</label>
+              <input
+                type="text"
+                value={newSubcategory.meta_keywords}
+                onChange={(e) => setNewSubcategory({ ...newSubcategory, meta_keywords: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setIsModalOpen(false)}

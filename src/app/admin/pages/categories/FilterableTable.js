@@ -11,6 +11,9 @@ const FilterableTable = ({ categories, fetchCategories }) => {
     id: null,
     name: '',
     imageUrl: '',
+    meta_title: '',           // Add meta title field
+    meta_description: '',     // Add meta description field
+    meta_keywords: '',        // Add meta keywords field
   });
   const [image, setImage] = useState(null);
 
@@ -43,7 +46,6 @@ const FilterableTable = ({ categories, fetchCategories }) => {
         const result = await response.json();
         if (response.ok) {
           imageUrl = result.image_url;
-          
         } else {
           throw new Error(result.error || 'Failed to upload image');
         }
@@ -77,7 +79,14 @@ const FilterableTable = ({ categories, fetchCategories }) => {
       const responseData = await response.json();
       console.log('Response from server:', responseData);
       setIsModalOpen(false);
-      setNewCategory({ id: null, name: '', imageUrl: '' });
+      setNewCategory({
+        id: null,
+        name: '',
+        imageUrl: '',
+        meta_title: '',           // Reset meta fields after submission
+        meta_description: '',
+        meta_keywords: '',
+      });
       setImage(null);
     } catch (error) {
       console.error('Error adding or updating item:', error);
@@ -107,6 +116,9 @@ const FilterableTable = ({ categories, fetchCategories }) => {
       ...item,
       image: null, // Reset image for edit
       imageUrl: item.imageUrl, // Existing image URL
+      meta_title: item.meta_title || '',           // Pre-fill existing meta fields
+      meta_description: item.meta_description || '',
+      meta_keywords: item.meta_keywords || '',
     });
     setIsModalOpen(true);
   };
@@ -144,6 +156,9 @@ const FilterableTable = ({ categories, fetchCategories }) => {
                   id: null,
                   name: '',
                   imageUrl: '',
+                  meta_title: '',           // Reset meta fields when adding a new category
+                  meta_description: '',
+                  meta_keywords: '',
                 });
                 setIsModalOpen(true);
               }}
@@ -239,6 +254,37 @@ const FilterableTable = ({ categories, fetchCategories }) => {
                 className="mt-1 p-2 border border-gray-300 rounded w-full"
               />
             </div>
+            
+            {/* Meta Fields */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+              <input
+                type="text"
+                value={newCategory.meta_title}
+                onChange={(e) => setNewCategory({ ...newCategory, meta_title: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+              <textarea
+                value={newCategory.meta_description}
+                onChange={(e) => setNewCategory({ ...newCategory, meta_description: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Meta Keywords</label>
+              <input
+                type="text"
+                value={newCategory.meta_keywords}
+                onChange={(e) => setNewCategory({ ...newCategory, meta_keywords: e.target.value })}
+                className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setIsModalOpen(false)}

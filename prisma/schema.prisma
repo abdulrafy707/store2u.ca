@@ -1,6 +1,7 @@
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  
 }
 
 generator client {
@@ -35,6 +36,11 @@ model Category {
   subcategories Subcategory[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  // New SEO fields
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
 }
 
 model Subcategory {
@@ -46,6 +52,11 @@ model Subcategory {
   products    Product[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  // New SEO fields
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
 }
 
 model Size {
@@ -77,6 +88,10 @@ model Product {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   orderItems  OrderItem[]
+
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
 }
 
 

@@ -36,6 +36,9 @@ const FilterableTable = ({
     discount: '',
     isTopRated: false,
     images: [],
+    meta_title: '',           // Add meta title field
+    meta_description: '',     // Add meta description field
+    meta_keywords: '',        // Add meta keywords field
   });
   const [existingImages, setExistingImages] = useState([]);
   const fileInputRef = useRef(null);
@@ -96,7 +99,7 @@ const FilterableTable = ({
 
   const handleEditItem = (item) => {
     setEditProduct(item);
-
+  
     // Get the existing colors and sizes for this product
     const existingColors = colors
       .filter((color) => item.colors.includes(color.id))
@@ -105,11 +108,12 @@ const FilterableTable = ({
         label: `${color.name} (${color.hex})`,
         hex: color.hex,
       }));
-
+  
     const existingSizes = sizes
       .filter((size) => item.sizes.includes(size.id))
       .map((size) => ({ value: size.id, label: size.name }));
-
+  
+    // Set the product form with the existing product values including the meta fields
     setProductForm({
       name: item.name,
       description: item.description,
@@ -117,13 +121,18 @@ const FilterableTable = ({
       stock: item.stock,
       subcategoryId: item.subcategoryId,
       colors: existingColors, // Set existing colors
-      sizes: existingSizes, // Set existing sizes
+      sizes: existingSizes,    // Set existing sizes
       discount: item.discount || '',
       isTopRated: item.isTopRated || false,
-      images: [],
+      images: [], // Reset the image input for uploading new images
+      meta_title: item.meta_title || '',           // Set existing meta title
+      meta_description: item.meta_description || '', // Set existing meta description
+      meta_keywords: item.meta_keywords || '',     // Set existing meta keywords
     });
-    setExistingImages(item.images || []);
+  
+    setExistingImages(item.images || []); // Set existing images for the product
   };
+  
 
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -197,6 +206,9 @@ const FilterableTable = ({
         isTopRated: productForm.isTopRated,
         colors: productForm.colors.map((color) => color.value),
         sizes: productForm.sizes.map((size) => size.value),
+        meta_title: productForm.meta_title,
+        meta_description: productForm.meta_description,
+        meta_keywords: productForm.meta_keywords,
       };
 
       const response = await fetch(`/api/products/${editProduct.id}`, {
@@ -221,6 +233,9 @@ const FilterableTable = ({
           discount: '',
           isTopRated: false,
           images: [],
+          meta_title: item.meta_title || '',           // Set existing meta title
+          meta_description: item.meta_description || '', // Set existing meta description
+          meta_keywords: item.meta_keywords || '',     // Set existing meta keywords
         });
       } else {
         console.error('Failed to update product');
@@ -612,6 +627,51 @@ const FilterableTable = ({
                   }))}
                 />
               </div>
+
+
+              <div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Meta Title
+  </label>
+  <input
+    type="text"
+    name="meta_title"
+    value={productForm.meta_title}
+    onChange={handleFormChange}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Meta Description
+  </label>
+  <textarea
+    name="meta_description"
+    value={productForm.meta_description}
+    onChange={handleFormChange}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+<div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">
+    Meta Keywords
+  </label>
+  <input
+    type="text"
+    name="meta_keywords"
+    value={productForm.meta_keywords}
+    onChange={handleFormChange}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+
+
+
+
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Images
