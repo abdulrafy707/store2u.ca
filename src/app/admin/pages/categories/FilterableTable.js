@@ -104,6 +104,7 @@ const FilterableTable = ({ categories, fetchCategories }) => {
           'Content-Type': 'application/json',
         },
       });
+      
       fetchCategories(); // Refresh the data after deleting
     } catch (error) {
       console.error('Error deleting item:', error);
