@@ -86,9 +86,9 @@ const Terms = () => {
         </p>
         <address className="mb-8">
           Store2U<br />
-          [Your Company Address]<br />
-          [City, State, Zip Code]<br />
-          [Country]
+          PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,District Toba Tek Singh, Punjab, Pakistan<br />
+          56000<br />
+          PAKISTAN
         </address>
       </div>
     </>

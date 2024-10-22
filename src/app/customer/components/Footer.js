@@ -71,7 +71,7 @@ const Footer = () => {
           
           
           <p className="text-[15px] font-[400]">Email: info@store2u.ca</p>
-          <p className="text-[15px] font-[400]">Phone: +92310356111</p>
+          <p className="text-[15px] font-[400]">Phone: +923310356111</p>
           <p className="text-[15px] font-[400]">Address:   PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,District Toba Tek Singh, Punjab, Pakistan</p>
         </div>
       </div>
