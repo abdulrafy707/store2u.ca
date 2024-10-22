@@ -32,7 +32,7 @@ const ReturnPolicy = () => {
 
         <h3 className="text-xl font-semibold mb-2">Return Process:</h3>
         <ol className="list-decimal list-inside mb-8">
-          <li className="mb-2">To initiate a return, please contact our customer support team at <a href="mailto:returns@store2u.ca" className="text-blue-500 hover:underline">returns@store2u.ca</a> with your order number and the reason for the return.</li>
+          <li className="mb-2">To initiate a return, please contact our customer support team at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a> with your order number and the reason for the return.</li>
           <li className="mb-2">Once your return is approved, we will provide you with a return shipping address and instructions.</li>
           <li className="mb-2">Pack the item securely in its original packaging, including all tags, instructions, and any accessories that came with the item.</li>
           <li className="mb-2">Ship the item to the provided address.</li>
@@ -53,12 +53,12 @@ const ReturnPolicy = () => {
         <h2 className="text-2xl font-semibold mb-4">2. Exchanges</h2>
         <h3 className="text-xl font-semibold mb-2">Eligibility for Exchanges:</h3>
         <p className="mb-8">
-          We only replace items if they are defective or damaged. If you need to exchange an item for the same product, please contact us at <a href="mailto:exchanges@store2u.ca" className="text-blue-500 hover:underline">exchanges@store2u.ca</a>.
+          We only replace items if they are defective or damaged. If you need to exchange an item for the same product, please contact us at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a>.
         </p>
 
         <h3 className="text-xl font-semibold mb-2">Exchange Process:</h3>
         <ol className="list-decimal list-inside mb-8">
-          <li className="mb-2">To initiate an exchange, please contact our customer support team at <a href="mailto:exchanges@store2u.ca" className="text-blue-500 hover:underline">exchanges@store2u.ca</a> with your order number, details of the defect or damage, and any supporting photos.</li>
+          <li className="mb-2">To initiate an exchange, please contact our customer support team at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a> with your order number, details of the defect or damage, and any supporting photos.</li>
           <li className="mb-2">Once your exchange is approved, we will provide you with further instructions.</li>
           <li className="mb-2">Pack the item securely in its original packaging and ship it to the provided address.</li>
           <li className="mb-2">Once we receive the item and inspect it, we will send you a replacement.</li>
@@ -72,13 +72,13 @@ const ReturnPolicy = () => {
 
         <h2 className="text-2xl font-semibold mb-4">3. Contact Us</h2>
         <p className="mb-4">
-          If you have any questions about our return and exchange policy, please contact us at <a href="mailto:support@store2u.ca" className="text-blue-500 hover:underline">support@store2u.ca</a> or by mail at:
+          If you have any questions about our return and exchange policy, please contact us at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a> or by mail at:
         </p>
         <address className="mb-8">
           Store2U<br />
           Tahir Sajjad<br />
-          15C 12street, Garden Town<br />
-          Gojra, Punjab, Pakistan<br />
+          PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,<br>
+          </br>District Toba Tek Singh, Punjab, Pakistan<br></br>
           56000<br />
           PAKISTAN<br />
           0092-3310356111<br />

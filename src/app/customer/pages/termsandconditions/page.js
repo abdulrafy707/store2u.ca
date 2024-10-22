@@ -11,7 +11,7 @@ const Terms = () => {
         <h1 className="text-4xl font-bold mb-8 text-center">Terms and Conditions</h1>
         <p className="text-sm text-gray-500 mb-4">Last Updated: [Date]</p>
         <p className="mb-4">
-          Welcome to Store2U! These terms and conditions outline the rules and regulations for the use of Store2U's website, located at <a href="http://www.store2u.com" className="text-blue-500 hover:underline">www.store2u.com</a> (the "Site").
+          Welcome to Store2U! These terms and conditions outline the rules and regulations for the use of Store2U's website, located at <a href="http://www.store2u.ca" className="text-blue-500 hover:underline">www.store2u.ca</a> (the "Site").
         </p>
         <p className="mb-8">
           By accessing this website, we assume you accept these terms and conditions. Do not continue to use Store2U if you do not agree to take all of the terms and conditions stated on this page.
@@ -77,12 +77,12 @@ const Terms = () => {
 
         <h2 className="text-2xl font-semibold mb-4">11. Governing Law</h2>
         <p className="mb-8">
-          These terms and conditions are governed by and construed in accordance with the laws of [Your Country/State], and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
+          These terms and conditions are governed by and construed in accordance with the laws of Pakistan, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
         </p>
 
         <h2 className="text-2xl font-semibold mb-4">12. Contact Us</h2>
         <p className="mb-4">
-          If you have any questions about these terms and conditions, please contact us at <a href="mailto:support@store2u.com" className="text-blue-500 hover:underline">support@store2u.com</a> or by mail at:
+          If you have any questions about these terms and conditions, please contact us at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a> or by mail at:
         </p>
         <address className="mb-8">
           Store2U<br />

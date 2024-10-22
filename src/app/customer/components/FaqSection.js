@@ -28,7 +28,7 @@ const FaqSection = () => {
     },
     // {
     //   question: "How do I contact customer support?",
-    //   answer: "You can reach our customer support team via email at support@store2u.com or by phone at +92 312 8807795. We are available Monday to Friday from 9 AM to 6 PM."
+    //   answer: "You can reach our customer support team via email at store2u.caor by phone at +92 312 8807795. We are available Monday to Friday from 9 AM to 6 PM."
     // },
     // {
     //   question: "Do you offer international shipping?",

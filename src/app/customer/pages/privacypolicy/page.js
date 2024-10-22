@@ -76,8 +76,8 @@ const PrivacyPolicy = () => {
         <address className="mb-8">
           Store2U<br />
           Tahir Sajjad<br />
-          15C 12street, Garden Town<br />
-          Gojra, Punjab, Pakistan<br />
+          PO Chak No. 356/jb Khalsa Abad, Tehseil Gojra,<br></br>
+          District Toba Tek Singh, Punjab, Pakistan<br></br>
           56000<br />
           PAKISTAN<br />
           0092-3310356111<br />

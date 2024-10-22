@@ -34,7 +34,7 @@ const About = () => {
             <section>
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Contact Us</h2>
               <p className="text-gray-600 leading-relaxed">
-                If you have any questions, feedback, or concerns, please don't hesitate to reach out to us. You can contact our customer support team at <a href="mailto:support@store2u.com" className="text-blue-500 hover:underline">support@store2u.com</a>.
+                If you have any questions, feedback, or concerns, please don't hesitate to reach out to us. You can contact our customer support team at <a href="mailto:info@store2u.ca" className="text-blue-500 hover:underline">info@store2u.ca</a>.
               </p>
             </section>
           </div>
